@@ -10,8 +10,8 @@
 </head>
 
 <body>
-    <div class="bg-light" id="jlApp">
-        <nav class="navbar navbar-expand-lg navbar-light">
+    <div id="jlApp">
+        <nav class="navbar navbar-expand-lg navbar-light" style="background: #FFF;">
             <a class="navbar-brand" href="#">锦鲤阅读</a>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
                 <ul class="navbar-nav mr-auto">
@@ -51,25 +51,28 @@
                 </ul>
             </div>
         </nav>
+        <div class="bg-light" style="padding: .5rem 18rem">
+        	{{ template "content" }}
+        </div>
     </div>
     <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/vue.js"></script>
     <script type="text/javascript">
-    	var app = new Vue({
-    		el:"#jlApp",
-    		data:{
-    			isLogin:false
-    		},
-    		methods:{
-    			login:function(){
-    				this.isLogin=true;
-    			},
-    			logout:function(){
-    				this.isLogin=false;
-    			}
-    		}
-    	});
+    var app = new Vue({
+        el: "#jlApp",
+        data: {
+            isLogin: false
+        },
+        methods: {
+            login: function() {
+                this.isLogin = true;
+            },
+            logout: function() {
+                this.isLogin = false;
+            }
+        }
+    });
     </script>
 </body>
 
