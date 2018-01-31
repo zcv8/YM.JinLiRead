@@ -1,0 +1,77 @@
+{{ define "layout" }}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>锦鲤阅读 专注价值阅读</title>
+    <link rel="stylesheet" type="text/css" href="/static/css/open-iconic-bootstrap.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.extend.css">
+</head>
+
+<body>
+    <div class="bg-light" id="jlApp">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <a class="navbar-brand" href="#">锦鲤阅读</a>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav mr-auto">
+                    <li class="nav-item active">
+                        <a class="nav-link" href="#">首页<span class="sr-only">(current)</span></a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">发现</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">话题</a>
+                    </li>
+                </ul>
+                <form class="form-inline my-2 my-lg-0 mr-sm-4">
+                    <input class="form-control mr-sm-2" type="search" placeholder="搜索你所感兴趣的内容..." aria-label="Search">
+                    <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
+                </form>
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">通知</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">购物车</a>
+                    </li>
+                    <li class="nav-item dropdown" v-if="isLogin">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">拂晓</a>
+                        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                            <a class="dropdown-item" href="#">个人中心</a>
+                            <a class="dropdown-item" href="#">设置</a>
+                            <div class="dropdown-divider"></div>
+                            <span class="dropdown-item" @click="logout()">退出</span>
+                        </div>
+                    </li>
+                    <li class="nav-item" v-if="!isLogin">
+                        <span class="nav-link" @click="login()">登录/注册</span>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="/static/js/vue.js"></script>
+    <script type="text/javascript">
+    	var app = new Vue({
+    		el:"#jlApp",
+    		data:{
+    			isLogin:false
+    		},
+    		methods:{
+    			login:function(){
+    				this.isLogin=true;
+    			},
+    			logout:function(){
+    				this.isLogin=false;
+    			}
+    		}
+    	});
+    </script>
+</body>
+
+</html>
+{{ end }}
