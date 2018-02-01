@@ -11,6 +11,7 @@
 ### 3.添加登录注册样式 (更新于2018.02.01)
 - 3.1 添加登录和注册弹出样式
 - 3.2 添加验证码,使用GO开源项目生成验证码
+
 	3.2.1 安装第三方依赖包	`go get github.com/mojocn/base64Captcha`
 	3.2.2 `go get golang.org/x/image` 失败解决方案:
 ```
@@ -18,4 +19,4 @@
 		cd $GOPATH/src/golang.org/x
 		git clone https://github.com/golang/image.git
 ```
->>参考：https://studygolang.com/articles/12050
+> 参考：https://studygolang.com/articles/12050
