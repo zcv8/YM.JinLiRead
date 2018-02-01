@@ -1,3 +1,20 @@
 .navbar {
     padding: .5rem 18rem;
 }
+.nav-tabs .nav-link{
+	border:none;
+	cursor: pointer;
+	color: #6c757d;
+}
+.nav-tabs .nav-link.active{
+	border:none;
+	cursor: pointer;
+	color:#007bff;
+	border-bottom: solid #007bff;
+}
+
+@media (min-width: 576px){
+	.modal-dialog {
+	    max-width: 380px;
+	}
+}
