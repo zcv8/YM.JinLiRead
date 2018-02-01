@@ -13,6 +13,7 @@
 - 3.2 添加验证码,使用GO开源项目生成验证码
 
 	3.2.1 安装第三方依赖包	`go get github.com/mojocn/base64Captcha`
+	
 	3.2.2 `go get golang.org/x/image` 失败解决方案:
 ```
 		mkdir -p $GOPATH/src/golang.org/x
