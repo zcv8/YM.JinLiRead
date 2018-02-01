@@ -8,7 +8,6 @@
     <link rel="stylesheet" type="text/css" href="/static/css/ionicons.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.extend.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/sliding.verificationcode.css">
 </head>
 
 <body>
@@ -54,7 +53,7 @@
             </div>
         </nav>
         <div class="bg-light" style="padding: .5rem 18rem">
-        	{{ template "content" }}
+            {{ template "content" }}
         </div>
         <!-- Modal -->
         <div class="modal fade" id="exampleModalCenter" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
@@ -70,7 +69,7 @@
                         </button>
                         <form style="margin-top:20px;" v-show="isLoginTab">
                             <div class="form-group">
-                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="请输入登录邮箱/手机号"> 
+                                <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" placeholder="请输入登录邮箱/手机号">
                                 <small id="emailHelp" class="form-text text-muted"></small>
                             </div>
                             <div class="form-group">
@@ -84,76 +83,87 @@
                                 </span>
                             </div>
                             <button type="button" style="margin-top: 10px;font-size: 1rem;border-radius: 0px;" class="btn btn-primary btn-lg btn-block" @click="login()">
-                            登录</button>
+                                登录</button>
                             <div class="form-group" style="padding-top: 15px;">
                                 <span class="form-check-label text-muted">其他登录方式</span>
                                 <span class="form-check-label" style="margin: 5px;cursor:pointer;"><span class="ion ion-social-tux" style="font-size:26px;position: relative;top: 5px;left: 10px;"></span></span>
                                 <span class="form-check-label" style="margin: 10px;cursor:pointer;"><span class="ion ion-social-github" style="font-size:26px;position: relative;top: 4px;left: 10px;"></span></span>
                                 <span class="form-check-label" style="margin: 10px;cursor:pointer;"><span class="ion ion-social-snapchat" style="font-size:26px;position: relative;top: 5px;left: 10px;"></span></span>
-                                 <span class="form-check-label" style="margin: 10px;cursor:pointer;"><span class="ion ion-social-pinterest-outline" style="font-size:26px;position: relative;top: 5px;left: 10px;"></span></span>
+                                <span class="form-check-label" style="margin: 10px;cursor:pointer;"><span class="ion ion-social-pinterest-outline" style="font-size:26px;position: relative;top: 5px;left: 10px;"></span></span>
                             </div>
                         </form>
                         <form style="margin-top:20px;" v-show="!isLoginTab">
                             <div class="form-group">
                                 <input type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="请输入注册邮箱/手机号">
-                                <small id="emailHelp" class="form-text text-muted"></small>
                             </div>
                             <div class="form-group">
                                 <input type="password" class="form-control" id="exampleInputPassword2" placeholder="6-16位密码,区分大小写">
                             </div>
-                            <div class="form-group">
-                                <div id="dragContainer">
-                                    <div id="dragBg"></div>
-                                    <div id="dragText"></div>
-                                    <div id="dragHandler" class="dragHandlerBg"></div>
+                            <div class="form-row">
+                                <div class="col-7">
+                                    <input type="email" style="height: 50px;" class="form-control" id="code" placeholder="请输入验证码">
+                                    <small id="codeMsg" class="form-text text-muted">用户名或密码错误</small>
+                                </div>
+                                <div class="col">
+                                    <img v-bind:src="verifyImage" @click="getVerifycode()" alt="点击刷新">
                                 </div>
                             </div>
-                            <div class="form-check">
+                            <div class="form-check" style="margin-top: 10px;">
                                 <input type="checkbox" class="form-check-input" id="exampleCheck2">
                                 <label class="form-check-label" for="exampleCheck1">同意<a href="#">注册协议</a></label>
                             </div>
                             <button type="button" style="margin-top: 10px;font-size: 1rem;border-radius: 0px;" class="btn btn-primary btn-lg btn-block" @click="register()">
-                            注册</button>
+                                注册</button>
                         </form>
                     </div>
                 </div>
-          </div>
+            </div>
         </div>
-        
     </div>
-    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script type="text/javascript" src="http://code.jquery.com/jquery-latest.js"></script>
     <script type="text/javascript" src="/static/js/bootstrap.min.js"></script>
     <script type="text/javascript" src="/static/js/vue.js"></script>
-    <script type="text/javascript" src="/static/js/sliding.verificationcode.js"></script>
     <script type="text/javascript">
-        
-        var app = new Vue({
-            el: "#jlApp",
-            data: {
-                isLogin: false,
-                isLoginTab:true
+    var app = new Vue({
+        el: "#jlApp",
+        data: {
+            verifyId: "",
+            verifyImage: "",
+            isLogin: false,
+            isLoginTab: true
+        },
+        methods: {
+            login: function() {
+                this.isLogin = true;
+                $("#CloseModel").click();
             },
-            methods: {
-                login: function() {
-                    this.isLogin = true;
-                    $("#CloseModel").click();
-                },
-                logout: function() {
-                    this.isLogin = false;
-                },
-                register:function(){
-                    this.isLogin=true;
-                    $("#CloseModel").click();
-                },
-                toggleLogin:function(){
-                    this.isLoginTab=true;
-                },
-                toggleRegister:function(){
-                    this.isLoginTab=false;
-                    verifycode();
-                }
+            logout: function() {
+                this.isLogin = false;
+            },
+            register: function() {
+                this.isLogin = true;
+                $("#CloseModel").click();
+            },
+            toggleLogin: function() {
+                this.isLoginTab = true;
+            },
+            toggleRegister: function() {
+                this.isLoginTab = false;
+                this.getVerifycode();
+            },
+            getVerifycode: function() {
+                $.get("/api/getCaptcha",function(data) {
+                    var obj = data;
+                    if (obj != null) {
+                        if (obj.msg == "success") {
+                            app.verifyId = obj.captchaId;
+                            app.verifyImage = obj.data;
+                        }
+                    }
+                });
             }
-        });
+        }
+    });
     </script>
 </body>
 
