@@ -12,6 +12,9 @@
 	color:#007bff;
 	border-bottom: solid #007bff;
 }
+.form-control{
+	border-radius: 0px;
+}
 
 @media (min-width: 576px){
 	.modal-dialog {
