@@ -27,7 +27,7 @@
                     </li>
                 </ul>
                 <form class="form-inline my-2 my-lg-0 mr-sm-4">
-                    <input class="form-control mr-sm-2" type="search" placeholder="搜索你所感兴趣的内容..." aria-label="Search">
+                    <input class="form-control" style="margin-right:10px;width:300px;" type="search" placeholder="搜索你所感兴趣的内容..." aria-label="Search">
                     <button class="btn btn-outline-success my-2 my-sm-0" type="submit">搜索</button>
                 </form>
                 <ul class="navbar-nav">
@@ -47,7 +47,7 @@
                         </div>
                     </li>
                     <li class="nav-item" v-if="!isLogin">
-                        <span class="nav-link" data-toggle="modal" data-target="#exampleModalCenter">登录/注册</span>
+                        <span class="nav-link" data-toggle="modal" @click="initLoginDialog()" data-target="#exampleModalCenter">登录/注册</span>
                     </li>
                 </ul>
             </div>
@@ -107,7 +107,7 @@
                                     <img v-bind:src="verifyImage" @click="getVerifycode()" title="点击刷新">
                                 </div>
                             </div>
-                            <div v-show="registerMessage" v-text="registerMessage" style="margin-top: 0px;" class="form-text error"></div>
+                            <div v-show="registerMessage" v-text="registerMessage" style="margin-top: 5px;" class="form-text error"></div>
                             <div class="form-check" style="margin-top: 10px;">
                                 <input type="checkbox" class="form-check-input" id="exampleCheck2">
                                 <label class="form-check-label" for="exampleCheck1">同意<a href="#">注册协议</a></label>
@@ -132,65 +132,86 @@
             verifyImage: "",
             isLogin: false,
             isLoginTab: true,
-            loginUserName:"",
-            loginPassword:"",
-            loginMessage:"",
-            registerUserName:"",
-            registerPassword:"",
-            registerCode:"",
-            registerMessage:""
+            loginUserName: "",
+            loginPassword: "",
+            loginMessage: "",
+            registerUserName: "",
+            registerPassword: "",
+            registerCode: "",
+            registerMessage: ""
         },
         methods: {
-            initLoginInfo:function(){
-                this.loginMessage="";
-                this.loginUserName="";
-                this.loginPassword="";
+            initLoginDialog: function() {
+                this.initLoginInfo();
+                this.initLoginStyle();
+                this.initRegisterInfo();
+                this.initRegisterStyle();
             },
-            initLoginStyle:function(){
+            initLoginInfo: function() {
+                this.loginMessage = "";
+                this.loginUserName = "";
+                this.loginPassword = "";
+            },
+            initLoginStyle: function() {
                 $("#exampleInputEmail1").removeClass("input-error");
                 $("#exampleInputPassword1").removeClass("input-error");
             },
-            initRegisterInfo:function(){
-                this.registerMessage="";
-                this.registerUserName="";
-                this.registerCode="";
-                this.registerPassword="";
+            initRegisterInfo: function() {
+                this.registerMessage = "";
+                this.registerUserName = "";
+                this.registerCode = "";
+                this.registerPassword = "";
             },
-            initRegisterStyle:function(){
+            initRegisterStyle: function() {
                 $("#exampleInputEmail2").removeClass("input-error");
                 $("#exampleInputPassword2").removeClass("input-error");
                 $("#code").removeClass("input-error");
             },
             login: function() {
                 this.initLoginStyle();
-                if(!verifyEmail(this.loginUserName)&&!verifyPhone(this.loginUserName)){
-                    this.loginMessage="请输入正确的登录邮箱/手机号";
+                if (!verifyEmail(this.loginUserName) && !verifyPhone(this.loginUserName)) {
+                    this.loginMessage = "请输入正确的登录邮箱/手机号";
                     $("#exampleInputEmail1").addClass("input-error");
                     return;
-                }else if(this.loginPassword.length<6||this.loginPassword.length>16){
-                    this.loginMessage="请输入6-16位密码,区分大小写";
+                } else if (this.loginPassword.length < 6 || this.loginPassword.length > 16) {
+                    this.loginMessage = "请输入6-16位密码,区分大小写";
                     $("#exampleInputPassword1").addClass("input-error");
                     return;
                 }
-                this.isLogin = true;
-                $("#CloseModel").click();
-                this.initLoginInfo();
+                $.post("/api/login", {
+                    "username": this.loginUserName,
+                    "password": this.loginPassword
+                }, function(data) {
+                    if (data == "OK") {
+                        app.isLogin = true;
+                        $("#CloseModel").click();
+                        app.initLoginInfo();
+                    } else if (data == "ErrorFormatter") {
+                        app.loginMessage = "请输入正确的登录邮箱/手机号";
+                        $("#exampleInputEmail1").addClass("input-error");
+                    } else if (data == "Too Long") {
+                        app.loginMessage = "请输入6-16位密码,区分大小写";
+                        $("#exampleInputPassword1").addClass("input-error");
+                    } else {
+                        app.loginMessage = "用户名或密码不正确";
+                    }
+                });
             },
             logout: function() {
                 this.isLogin = false;
             },
             register: function() {
                 this.initRegisterStyle();
-                if(!verifyEmail(this.registerUserName)&&!verifyPhone(this.registerUserName)){
-                    this.registerMessage="请输入正确的登录邮箱/手机号";
+                if (!verifyEmail(this.registerUserName) && !verifyPhone(this.registerUserName)) {
+                    this.registerMessage = "请输入正确的登录邮箱/手机号";
                     $("#exampleInputEmail2").addClass("input-error");
                     return;
-                }else if(this.registerPassword.length<6||this.registerPassword.length>16){
-                    this.registerMessage="请输入6-16位密码,区分大小写";
+                } else if (this.registerPassword.length < 6 || this.registerPassword.length > 16) {
+                    this.registerMessage = "请输入6-16位密码,区分大小写";
                     $("#exampleInputPassword2").addClass("input-error");
                     return;
-                }else if(this.registerCode.length==0){
-                    this.registerMessage="请输入验证码";
+                } else if (this.registerCode.length == 0) {
+                    this.registerMessage = "请输入验证码";
                     $("#code").addClass("input-error");
                     return;
                 }
@@ -206,7 +227,7 @@
                 this.getVerifycode();
             },
             getVerifycode: function() {
-                $.get("/api/getCaptcha",function(data) {
+                $.get("/api/getCaptcha", function(data) {
                     var obj = data;
                     if (obj != null) {
                         if (obj.msg == "success") {

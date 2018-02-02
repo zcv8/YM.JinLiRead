@@ -1,7 +1,9 @@
 package main
 
 import (
+	"business"
 	"html/template"
+	_ "log"
 	"net/http"
 	"validation"
 )
@@ -15,6 +17,8 @@ func main() {
 	mux.HandleFunc("/api/getCaptcha", validation.GenerateCaptchaHandler)
 	//api for verify captcha
 	mux.HandleFunc("/api/verifyCaptcha", validation.CaptchaVerifyHandler)
+	//验证登录
+	mux.HandleFunc("/api/login", business.Login)
 	mux.HandleFunc("/", indexHandler)
 
 	sever := &http.Server{
