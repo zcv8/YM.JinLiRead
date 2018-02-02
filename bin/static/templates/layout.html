@@ -132,62 +132,68 @@
             verifyImage: "",
             isLogin: false,
             isLoginTab: true,
-            loginUserName:"",
-            loginPassword:"",
-            loginMessage:"",
-            registerUserName:"",
-            registerPassword:"",
-            registerCode:"",
-            registerMessage:""
+            loginUserName: "",
+            loginPassword: "",
+            loginMessage: "",
+            registerUserName: "",
+            registerPassword: "",
+            registerCode: "",
+            registerMessage: ""
         },
         methods: {
-            initLoginDialog:function(){
+            initLoginDialog: function() {
                 this.initLoginInfo();
                 this.initLoginStyle();
                 this.initRegisterInfo();
                 this.initRegisterStyle();
             },
-            initLoginInfo:function(){
-                this.loginMessage="";
-                this.loginUserName="";
-                this.loginPassword="";
+            initLoginInfo: function() {
+                this.loginMessage = "";
+                this.loginUserName = "";
+                this.loginPassword = "";
             },
-            initLoginStyle:function(){
+            initLoginStyle: function() {
                 $("#exampleInputEmail1").removeClass("input-error");
                 $("#exampleInputPassword1").removeClass("input-error");
             },
-            initRegisterInfo:function(){
-                this.registerMessage="";
-                this.registerUserName="";
-                this.registerCode="";
-                this.registerPassword="";
+            initRegisterInfo: function() {
+                this.registerMessage = "";
+                this.registerUserName = "";
+                this.registerCode = "";
+                this.registerPassword = "";
             },
-            initRegisterStyle:function(){
+            initRegisterStyle: function() {
                 $("#exampleInputEmail2").removeClass("input-error");
                 $("#exampleInputPassword2").removeClass("input-error");
                 $("#code").removeClass("input-error");
             },
             login: function() {
                 this.initLoginStyle();
-                if(!verifyEmail(this.loginUserName)&&!verifyPhone(this.loginUserName)){
-                    this.loginMessage="请输入正确的登录邮箱/手机号";
+                if (!verifyEmail(this.loginUserName) && !verifyPhone(this.loginUserName)) {
+                    this.loginMessage = "请输入正确的登录邮箱/手机号";
                     $("#exampleInputEmail1").addClass("input-error");
                     return;
-                }else if(this.loginPassword.length<6||this.loginPassword.length>16){
-                    this.loginMessage="请输入6-16位密码,区分大小写";
+                } else if (this.loginPassword.length < 6 || this.loginPassword.length > 16) {
+                    this.loginMessage = "请输入6-16位密码,区分大小写";
                     $("#exampleInputPassword1").addClass("input-error");
                     return;
                 }
-                $.post("/api/login",{
-                    "username":this.loginUserName,
-                    "password":this.loginPassword
-                },function(data){
-                    if(data=="OK"){
+                $.post("/api/login", {
+                    "username": this.loginUserName,
+                    "password": this.loginPassword
+                }, function(data) {
+                    if (data == "OK") {
                         app.isLogin = true;
                         $("#CloseModel").click();
                         app.initLoginInfo();
-                    }else{
-                        app.loginMessage="用户名或密码不正确";
+                    } else if (data == "ErrorFormatter") {
+                        app.loginMessage = "请输入正确的登录邮箱/手机号";
+                        $("#exampleInputEmail1").addClass("input-error");
+                    } else if (data == "Too Long") {
+                        app.loginMessage = "请输入6-16位密码,区分大小写";
+                        $("#exampleInputPassword1").addClass("input-error");
+                    } else {
+                        app.loginMessage = "用户名或密码不正确";
                     }
                 });
             },
@@ -196,16 +202,16 @@
             },
             register: function() {
                 this.initRegisterStyle();
-                if(!verifyEmail(this.registerUserName)&&!verifyPhone(this.registerUserName)){
-                    this.registerMessage="请输入正确的登录邮箱/手机号";
+                if (!verifyEmail(this.registerUserName) && !verifyPhone(this.registerUserName)) {
+                    this.registerMessage = "请输入正确的登录邮箱/手机号";
                     $("#exampleInputEmail2").addClass("input-error");
                     return;
-                }else if(this.registerPassword.length<6||this.registerPassword.length>16){
-                    this.registerMessage="请输入6-16位密码,区分大小写";
+                } else if (this.registerPassword.length < 6 || this.registerPassword.length > 16) {
+                    this.registerMessage = "请输入6-16位密码,区分大小写";
                     $("#exampleInputPassword2").addClass("input-error");
                     return;
-                }else if(this.registerCode.length==0){
-                    this.registerMessage="请输入验证码";
+                } else if (this.registerCode.length == 0) {
+                    this.registerMessage = "请输入验证码";
                     $("#code").addClass("input-error");
                     return;
                 }
@@ -221,7 +227,7 @@
                 this.getVerifycode();
             },
             getVerifycode: function() {
-                $.get("/api/getCaptcha",function(data) {
+                $.get("/api/getCaptcha", function(data) {
                     var obj = data;
                     if (obj != null) {
                         if (obj.msg == "success") {

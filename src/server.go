@@ -3,6 +3,7 @@ package main
 import (
 	"business"
 	"html/template"
+	"log"
 	"net/http"
 	"validation"
 )
@@ -28,6 +29,7 @@ func main() {
 }
 
 func indexHandler(wr http.ResponseWriter, r *http.Request) {
+	log.Println(business.SessionManager)
 	templates := []string{
 		"static/templates/layout.html",
 		"static/templates/index.html",
