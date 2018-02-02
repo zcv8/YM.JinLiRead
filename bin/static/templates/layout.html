@@ -74,7 +74,7 @@
                             <div class="form-group">
                                 <input type="password" class="form-control" v-model="loginPassword" id="exampleInputPassword1" placeholder="6-16位密码,区分大小写">
                             </div>
-                            <div v-show="loginMessage" v-text="loginMessage" class="form-text error" role="alert"></div>
+                            <div v-show="loginMessage" v-text="loginMessage" class="form-text error"></div>
                             <div class="form-check">
                                 <input type="checkbox" class="form-check-input" id="exampleCheck1">
                                 <label class="form-check-label" for="exampleCheck1">7天内自动登录</label>
@@ -94,20 +94,20 @@
                         </form>
                         <form style="margin-top:20px;" v-show="!isLoginTab">
                             <div class="form-group">
-                                <input type="email" class="form-control" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="请输入注册邮箱/手机号">
+                                <input type="email" class="form-control" v-model="registerUserName" id="exampleInputEmail2" aria-describedby="emailHelp" placeholder="请输入注册邮箱/手机号">
                             </div>
                             <div class="form-group">
-                                <input type="password" class="form-control" id="exampleInputPassword2" placeholder="6-16位密码,区分大小写">
+                                <input type="password" class="form-control" v-model="registerPassword" id="exampleInputPassword2" placeholder="6-16位密码,区分大小写">
                             </div>
                             <div class="form-row">
                                 <div class="col-7">
-                                    <input type="email" style="height: 50px;" class="form-control" id="code" placeholder="请输入验证码">
-                                    <small id="codeMsg" class="form-text text-muted">用户名或密码错误</small>
+                                    <input type="email" style="height: 50px;" v-model="registerCode" class="form-control" id="code" placeholder="请输入验证码">
                                 </div>
                                 <div class="col">
                                     <img v-bind:src="verifyImage" @click="getVerifycode()" title="点击刷新">
                                 </div>
                             </div>
+                            <div v-show="registerMessage" v-text="registerMessage" style="margin-top: 0px;" class="form-text error"></div>
                             <div class="form-check" style="margin-top: 10px;">
                                 <input type="checkbox" class="form-check-input" id="exampleCheck2">
                                 <label class="form-check-label" for="exampleCheck1">同意<a href="#">注册协议</a></label>
@@ -134,35 +134,69 @@
             isLoginTab: true,
             loginUserName:"",
             loginPassword:"",
-            loginMessage:""
+            loginMessage:"",
+            registerUserName:"",
+            registerPassword:"",
+            registerCode:"",
+            registerMessage:""
         },
         methods: {
-            initLogin:function(){
-                $("#exampleInputEmail1").removeClass("input-error");
-                $("#exampleInputPassword1").removeClass("input-error");
+            initLoginInfo:function(){
                 this.loginMessage="";
                 this.loginUserName="";
                 this.loginPassword="";
             },
+            initLoginStyle:function(){
+                $("#exampleInputEmail1").removeClass("input-error");
+                $("#exampleInputPassword1").removeClass("input-error");
+            },
+            initRegisterInfo:function(){
+                this.registerMessage="";
+                this.registerUserName="";
+                this.registerCode="";
+                this.registerPassword="";
+            },
+            initRegisterStyle:function(){
+                $("#exampleInputEmail2").removeClass("input-error");
+                $("#exampleInputPassword2").removeClass("input-error");
+                $("#code").removeClass("input-error");
+            },
             login: function() {
-                this.initLogin();
-                if(!verifyEmail(this.loginUserName)){
+                this.initLoginStyle();
+                if(!verifyEmail(this.loginUserName)&&!verifyPhone(this.loginUserName)){
                     this.loginMessage="请输入正确的登录邮箱/手机号";
                     $("#exampleInputEmail1").addClass("input-error");
                     return;
                 }else if(this.loginPassword.length<6||this.loginPassword.length>16){
-                    this.loginMessage="6-16位密码,区分大小写";
+                    this.loginMessage="请输入6-16位密码,区分大小写";
                     $("#exampleInputPassword1").addClass("input-error");
                     return;
                 }
                 this.isLogin = true;
                 $("#CloseModel").click();
+                this.initLoginInfo();
             },
             logout: function() {
                 this.isLogin = false;
             },
             register: function() {
+                this.initRegisterStyle();
+                if(!verifyEmail(this.registerUserName)&&!verifyPhone(this.registerUserName)){
+                    this.registerMessage="请输入正确的登录邮箱/手机号";
+                    $("#exampleInputEmail2").addClass("input-error");
+                    return;
+                }else if(this.registerPassword.length<6||this.registerPassword.length>16){
+                    this.registerMessage="请输入6-16位密码,区分大小写";
+                    $("#exampleInputPassword2").addClass("input-error");
+                    return;
+                }else if(this.registerCode.length==0){
+                    this.registerMessage="请输入验证码";
+                    $("#code").addClass("input-error");
+                    return;
+                }
+                this.isLogin = true;
                 $("#CloseModel").click();
+                this.initRegisterInfo();
             },
             toggleLogin: function() {
                 this.isLoginTab = true;

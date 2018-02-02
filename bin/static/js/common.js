@@ -5,5 +5,5 @@ function verifyEmail(email){
 
 //验证手机号码
 function verifyPhone(phone){
-	
+	return /^1\d{10}$/.test(phone) ? true : false;
 }
