@@ -16,6 +16,17 @@
 	border-radius: 0px;
 }
 
+.error{
+	color:#FF2400;
+	font-size: 14px;
+	margin-top: -10px;
+	padding-left: 5px;
+}
+
+.input-error{
+	border-color:#FF2400;
+}
+
 @media (min-width: 576px){
 	.modal-dialog {
 	    max-width: 380px;
