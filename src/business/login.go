@@ -2,6 +2,7 @@ package business
 
 import (
 	"common"
+	"encoding/json"
 	"fmt"
 	"net/http"
 )
@@ -22,11 +23,21 @@ func Login(wr http.ResponseWriter, r *http.Request) {
 	password := r.PostFormValue("password")
 	md5Password := common.EncryptionMD5(password)
 	if !common.ValidEmail(username) && !common.ValidPhone(username) {
-		fmt.Fprint(wr, "ErrorFormatter")
+		rtr, _ := json.Marshal(&common.ReturnStatus{
+			Status:  "failed",
+			Data:    nil,
+			ErrCode: "ErrorFormatter",
+		})
+		fmt.Fprint(wr, string(rtr))
 		return
 	}
 	if len(password) < 6 || len(password) > 16 {
-		fmt.Fprint(wr, "Too Long")
+		rtr, _ := json.Marshal(&common.ReturnStatus{
+			Status:  "failed",
+			Data:    nil,
+			ErrCode: "Too Long",
+		})
+		fmt.Fprint(wr, string(rtr))
 		return
 	}
 
@@ -43,8 +54,18 @@ func Login(wr http.ResponseWriter, r *http.Request) {
 		}
 		http.SetCookie(wr, _cookie)
 		SessionManager[session.Id] = session
-		fmt.Fprint(wr, "OK")
+		rtr, _ := json.Marshal(&common.ReturnStatus{
+			Status:  "success",
+			Data:    nil,
+			ErrCode: "",
+		})
+		fmt.Fprint(wr, string(rtr))
 	} else {
-		fmt.Fprint(wr, "Error")
+		rtr, _ := json.Marshal(&common.ReturnStatus{
+			Status:  "failed",
+			Data:    nil,
+			ErrCode: "Authentication Failed",
+		})
+		fmt.Fprint(wr, string(rtr))
 	}
 }
