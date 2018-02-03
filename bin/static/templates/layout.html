@@ -182,18 +182,22 @@
                     "username": this.loginUserName,
                     "password": this.loginPassword
                 }, function(data) {
-                    if (data == "OK") {
+                    data = JSON.parse(data)
+                    if (data.Status == "success") {
                         app.isLogin = true;
                         $("#CloseModel").click();
                         app.initLoginInfo();
-                    } else if (data == "ErrorFormatter") {
-                        app.loginMessage = "请输入正确的登录邮箱/手机号";
-                        $("#exampleInputEmail1").addClass("input-error");
-                    } else if (data == "Too Long") {
-                        app.loginMessage = "请输入6-16位密码,区分大小写";
-                        $("#exampleInputPassword1").addClass("input-error");
-                    } else {
-                        app.loginMessage = "用户名或密码不正确";
+                    }
+                    else {
+                        if (data.ErrCode == "ErrorFormatter") {
+                            app.loginMessage = "请输入正确的登录邮箱/手机号";
+                            $("#exampleInputEmail1").addClass("input-error");
+                        } else if (data.ErrCode == "Too Long") {
+                            app.loginMessage = "请输入6-16位密码,区分大小写";
+                            $("#exampleInputPassword1").addClass("input-error");
+                        } else if (data.ErrCode == "Authentication Failed"){
+                            app.loginMessage = "用户名或密码不正确";
+                        }
                     }
                 });
             },
