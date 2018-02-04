@@ -26,3 +26,9 @@
 - 4.1 添加登录注册模块的页面样式的控制和验证逻辑
 - 4.2 通过在内存中创建Session结构保存用户登录成功后的信息，同时保存到Cookie中，方便对于每次Http请求验证是否登录，目前暂未实现对Session过期和Cookie过期时间的处理
 - 4.3 使用正则表达式验证用户输入
+
+### 5.实现Session管理机制 (更新于2018.02.04)
+- 5.1 实现了Session管理器，控制Session的添加，修改，查询，删除及其过期自动回收
+- 5.2 UML图
+
+> 参考：https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/06.0.md
