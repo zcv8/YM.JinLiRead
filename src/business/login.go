@@ -7,15 +7,14 @@ import (
 	"net/http"
 )
 
-//Session
-type Session struct {
-	Id       string
-	UserId   string
-	UserName string
-}
+//全局的Session管理器
+var Manager *common.SessionManager
 
-//Session管理
-var SessionManager = make(map[string]Session)
+//初始化函数
+func init() {
+	Manager, _ = common.NewManager("memory", common.AuthorizationKey, 3600)
+	go Manager.GC()
+}
 
 //处理登录业务
 func Login(wr http.ResponseWriter, r *http.Request) {
@@ -42,18 +41,7 @@ func Login(wr http.ResponseWriter, r *http.Request) {
 	}
 
 	if username == "12345678910" && md5Password == common.EncryptionMD5("123456") {
-		session := Session{
-			Id:       common.GetGuid(),
-			UserId:   common.GetGuid(),
-			UserName: username,
-		}
-		_cookie := &http.Cookie{
-			Name:     "loginInfo",
-			Value:    session.Id,
-			HttpOnly: true,
-		}
-		http.SetCookie(wr, _cookie)
-		SessionManager[session.Id] = session
+		Manager.SessionStart(wr, r)
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "success",
 			Data:    nil,
