@@ -30,5 +30,6 @@
 ### 5.实现Session管理机制 (更新于2018.02.04)
 - 5.1 实现了Session管理器，控制Session的添加，修改，查询，删除及其过期自动回收
 - 5.2 UML图
+![Session设计UML模型](https://github.com/zcv8/YM.JinLiRead/blob/master/uml/Session模型设计?raw=true)
 
 > 参考：https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/06.0.md
