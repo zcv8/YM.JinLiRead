@@ -7,7 +7,7 @@
     <link rel="stylesheet" type="text/css" href="/static/css/open-iconic-bootstrap.css">
     <link rel="stylesheet" type="text/css" href="/static/css/ionicons.min.css">
     <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.min.css">
-    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.extend.css">
+    <link rel="stylesheet" type="text/css" href="/static/css/bootstrap.extend.css?123">
 </head>
 
 <body>
@@ -52,7 +52,7 @@
                 </ul>
             </div>
         </nav>
-        <div class="bg-light" style="padding: .5rem 18rem">
+        <div class="bg-light" style="padding: .5rem 12rem">
             {{ template "content" }}
         </div>
         <!-- Modal -->
@@ -76,7 +76,7 @@
                             </div>
                             <div v-show="loginMessage" v-text="loginMessage" class="form-text error"></div>
                             <div class="form-check">
-                                <input type="checkbox" class="form-check-input" id="exampleCheck1">
+                                <input type="checkbox" v-model="ischecked" class="form-check-input" id="exampleCheck1">
                                 <label class="form-check-label" for="exampleCheck1">7天内自动登录</label>
                                 <span style="float:right;" class="form-check-label" for="exampleCheck1">
                                     <a href="#" class="text-muted">忘记密码？</a>
@@ -180,7 +180,8 @@
                 }
                 $.post("/api/login", {
                     "username": this.loginUserName,
-                    "password": this.loginPassword
+                    "password": this.loginPassword,
+                    "ischecked":this.ischecked
                 }, function(data) {
                     data = JSON.parse(data)
                     if (data.Status == "success") {

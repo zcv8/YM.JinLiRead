@@ -20,6 +20,7 @@ func init() {
 func Login(wr http.ResponseWriter, r *http.Request) {
 	username := r.PostFormValue("username")
 	password := r.PostFormValue("password")
+	//isChecked := r.PostFormValue("ischecked")
 	md5Password := common.EncryptionMD5(password)
 	if !common.ValidEmail(username) && !common.ValidPhone(username) {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
