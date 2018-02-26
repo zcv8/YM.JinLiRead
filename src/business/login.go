@@ -20,6 +20,7 @@ func init() {
 func Login(wr http.ResponseWriter, r *http.Request) {
 	username := r.PostFormValue("username")
 	password := r.PostFormValue("password")
+	ischecked := r.PostFormValue("checked")
 	md5Password := common.EncryptionMD5(password)
 	if !common.ValidEmail(username) && !common.ValidPhone(username) {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
@@ -41,7 +42,11 @@ func Login(wr http.ResponseWriter, r *http.Request) {
 	}
 
 	if username == "12345678910" && md5Password == common.EncryptionMD5("123456") {
-		Manager.SessionStart(wr, r)
+		tempTime := 0
+		if ischecked == "on" {
+			tempTime = 7 * 24 * 3600
+		}
+		Manager.SessionStart(wr, r, int64(tempTime))
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "success",
 			Data:    nil,

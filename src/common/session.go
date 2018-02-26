@@ -39,14 +39,14 @@ func NewManager(providerName string, cookieName string, maxLifeTime int64) (*Ses
 }
 
 //根据每次用户访问发现与之关联的Session,没有关联的Session则创建
-func (manager *SessionManager) SessionStart(w http.ResponseWriter, r *http.Request) (session Session) {
+func (manager *SessionManager) SessionStart(w http.ResponseWriter, r *http.Request, saveTime int64) (session Session) {
 	manager.lock.Lock()
 	defer manager.lock.Unlock()
 	cookie, err := r.Cookie(manager.cookieName)
 	//没发现cookie或者是cookie的值为空，则创建Session
 	if err != nil || cookie.Value == "" {
 		sid := GetGuid()
-		session, _ = manager.provider.SessionInit(sid)
+		session, _ = manager.provider.SessionInit(sid, saveTime)
 		cookie = &http.Cookie{
 			Name:     AuthorizationKey,
 			Value:    url.QueryEscape(sid),
@@ -58,7 +58,7 @@ func (manager *SessionManager) SessionStart(w http.ResponseWriter, r *http.Reque
 
 	} else {
 		sid, _ := url.QueryUnescape(cookie.Value)
-		session, _ = manager.provider.SessionRead(sid)
+		session, _ = manager.provider.SessionRead(sid, saveTime)
 	}
 	return
 }
