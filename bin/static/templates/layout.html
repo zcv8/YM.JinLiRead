@@ -76,7 +76,7 @@
                             </div>
                             <div v-show="loginMessage" v-text="loginMessage" class="form-text error"></div>
                             <div class="form-check">
-                                <input type="checkbox" v-model="ischecked" class="form-check-input" id="exampleCheck1">
+                                <input type="checkbox" v-model="isChecked" class="form-check-input" id="exampleCheck1">
                                 <label class="form-check-label" for="exampleCheck1">7天内自动登录</label>
                                 <span style="float:right;" class="form-check-label" for="exampleCheck1">
                                     <a href="#" class="text-muted">忘记密码？</a>
@@ -132,6 +132,7 @@
             verifyImage: "",
             isLogin: false,
             isLoginTab: true,
+            isChecked:false,
             loginUserName: "",
             loginPassword: "",
             loginMessage: "",
@@ -151,6 +152,7 @@
                 this.loginMessage = "";
                 this.loginUserName = "12345678910";
                 this.loginPassword = "123456";
+                this.isChecked=false;
             },
             initLoginStyle: function() {
                 $("#exampleInputEmail1").removeClass("input-error");
@@ -178,10 +180,11 @@
                     $("#exampleInputPassword1").addClass("input-error");
                     return;
                 }
+                alert(this.isChecked);
                 $.post("/api/login", {
                     "username": this.loginUserName,
                     "password": this.loginPassword,
-                    "ischecked":this.ischecked
+                    "checked":this.isChecked?"on":"off"
                 }, function(data) {
                     data = JSON.parse(data)
                     if (data.Status == "success") {

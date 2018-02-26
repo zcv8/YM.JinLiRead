@@ -9,9 +9,9 @@ import (
 //Provider操作
 type ProviderOperate interface {
 	//根据Session的ID创建Session
-	SessionInit(sid string) (Session, error)
+	SessionInit(sid string, saveTime int64) (Session, error)
 	//根据Session的ID读取Session
-	SessionRead(sid string) (Session, error)
+	SessionRead(sid string, saveTime int64) (Session, error)
 	//根据Session的ID删除Session
 	SessionDestroy(sid string) error
 	//对过期的Session进行垃圾回收
@@ -39,6 +39,7 @@ var pder = &Provider{list: list.New()}
 type SessionStore struct {
 	sid          string                      //session id唯一标示
 	timeAccessed time.Time                   //最后访问时间
+	saveTime     int64                       //存储时长
 	value        map[interface{}]interface{} //session里面存储的值
 }
 
@@ -72,22 +73,22 @@ func (st *SessionStore) SessionID() string {
 }
 
 //实现ProviderOperate 的 SessionInit 方法
-func (provider *Provider) SessionInit(sid string) (Session, error) {
+func (provider *Provider) SessionInit(sid string, saveTime int64) (Session, error) {
 	provider.lock.Lock()
 	defer provider.lock.Unlock()
 	v := make(map[interface{}]interface{}, 0)
-	newsess := &SessionStore{sid: sid, timeAccessed: time.Now(), value: v}
+	newsess := &SessionStore{sid: sid, timeAccessed: time.Now(), saveTime: saveTime, value: v}
 	element := provider.list.PushBack(newsess)
 	provider.sessions[sid] = element
 	return newsess, nil
 }
 
 //实现ProviderOperate 的 SessionRead 方法
-func (provider *Provider) SessionRead(sid string) (Session, error) {
+func (provider *Provider) SessionRead(sid string, saveTime int64) (Session, error) {
 	if element, ok := provider.sessions[sid]; ok {
 		return element.Value.(*SessionStore), nil
 	} else {
-		sess, err := provider.SessionInit(sid)
+		sess, err := provider.SessionInit(sid, saveTime)
 		return sess, err
 	}
 	return nil, nil
@@ -114,7 +115,7 @@ func (provider *Provider) SessionGC(maxLifeTime int64) {
 		if element == nil {
 			break
 		}
-		if element.Value.(*SessionStore).timeAccessed.Unix()+maxLifeTime < time.Now().Unix() {
+		if element.Value.(*SessionStore).timeAccessed.Unix()+maxLifeTime+element.Value.(*SessionStore).saveTime < time.Now().Unix() {
 			provider.list.Remove(element)
 			delete(provider.sessions, element.Value.(*SessionStore).sid)
 		} else {
@@ -128,8 +129,10 @@ func (provider *Provider) SessionUpdate(sid string) error {
 	provider.lock.Lock()
 	defer provider.lock.Unlock()
 	if element, ok := provider.sessions[sid]; ok {
-		element.Value.(*SessionStore).timeAccessed = time.Now()
-		provider.list.MoveToFront(element)
+		if element.Value.(*SessionStore).saveTime == 0 { //当saveTime等于0则为动态过期，否则为固定过期时间
+			element.Value.(*SessionStore).timeAccessed = time.Now()
+			provider.list.MoveToFront(element)
+		}
 		return nil
 	}
 	return nil
