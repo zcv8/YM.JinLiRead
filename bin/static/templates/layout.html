@@ -180,7 +180,6 @@
                     $("#exampleInputPassword1").addClass("input-error");
                     return;
                 }
-                alert(this.isChecked);
                 $.post("/api/login", {
                     "username": this.loginUserName,
                     "password": this.loginPassword,
