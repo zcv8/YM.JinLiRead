@@ -184,7 +184,7 @@
                 $.post("/api/login", {
                     "username": this.loginUserName,
                     "password": this.loginPassword,
-                    "ischecked":this.isChecked?"on":"off"
+                    "checked":this.isChecked?"on":"off"
                 }, function(data) {
                     data = JSON.parse(data)
                     if (data.Status == "success") {
