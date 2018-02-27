@@ -14,5 +14,4 @@
 .glide/
 
 #github
-vendor/github.com/
 server.exe

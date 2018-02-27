@@ -2,34 +2,5 @@
 	"ImportPath": "github.com/zcv8/YM.JinLiRead",
 	"GoVersion": "go1.9",
 	"GodepVersion": "v80",
-	"Deps": [
-		{
-			"ImportPath": "github.com/golang/freetype",
-			"Comment": "release-137-ge2365df",
-			"Rev": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
-		},
-		{
-			"ImportPath": "github.com/golang/freetype/raster",
-			"Comment": "release-137-ge2365df",
-			"Rev": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
-		},
-		{
-			"ImportPath": "github.com/golang/freetype/truetype",
-			"Comment": "release-137-ge2365df",
-			"Rev": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
-		},
-		{
-			"ImportPath": "github.com/mojocn/base64Captcha",
-			"Comment": "font_data_bin_for_go_cover_fix-23-g4f766fb",
-			"Rev": "4f766fb5036d06affec3de3dad49ea3f3c2eec25"
-		},
-		{
-			"ImportPath": "golang.org/x/image/font",
-			"Rev": "12117c17ca67ffa1ce22e9409f3b0b0a93ac08c7"
-		},
-		{
-			"ImportPath": "golang.org/x/image/math/fixed",
-			"Rev": "12117c17ca67ffa1ce22e9409f3b0b0a93ac08c7"
-		}
-	]
+	"Deps": []
 }
