@@ -1,11 +1,11 @@
 package main
 
 import (
-	"business"
+	"github.com/zcv8/YM.JinLiRead/business"
+	"github.com/zcv8/YM.JinLiRead/validation"
 	"html/template"
 	_ "log"
 	"net/http"
-	"validation"
 )
 
 func main() {
