@@ -33,3 +33,12 @@
 ![Session设计UML模型](https://github.com/zcv8/YM.JinLiRead/blob/master/uml/Session模型设计?raw=true)
 
 > 参考：https://github.com/astaxie/build-web-application-with-golang/blob/master/zh/06.0.md
+
+### 6.重新整理项目使用Godep进行依赖管理（更新于2018.02.27）
+- 6.1 在5的基础上添加Session的指定时间内过期，比如7天内免登录功能
+- 6.2 使用Godep依赖管理工具管理Go项目，并调整了Go项目的文件结构
+- 6.3 需要将项目签出到src/github.com/zcv8/ 目录下，然后使用 `go get github.com/tools/godep` 安装godep工具，安装成功之后就会在bin目录下出现godep的可执行文件。具体使用方式可以运行‘godep help’命令查看
+
+
+
+

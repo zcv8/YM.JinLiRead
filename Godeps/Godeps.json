@@ -2,5 +2,19 @@
 	"ImportPath": "github.com/zcv8/YM.JinLiRead",
 	"GoVersion": "go1.9",
 	"GodepVersion": "v80",
-	"Deps": []
+	"Packages": [
+		"github.com/lib/pq"
+	],
+	"Deps": [
+		{
+			"ImportPath": "github.com/lib/pq",
+			"Comment": "go1.0-cutoff-203-g88edab0",
+			"Rev": "88edab0803230a3898347e77b474f8c1820a1f20"
+		},
+		{
+			"ImportPath": "github.com/lib/pq/oid",
+			"Comment": "go1.0-cutoff-203-g88edab0",
+			"Rev": "88edab0803230a3898347e77b474f8c1820a1f20"
+		}
+	]
 }
