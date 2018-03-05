@@ -8,9 +8,10 @@ import (
 
 var Db *sql.DB
 
+//这个函数只会加载一次
 func init() {
 	var err error
-	Db, err = sql.Open("postgres", "dbname=test sslmode=disable")
+	Db, err = sql.Open("postgres", "host=* port=5432 user=postgres password=* dbname=* sslmode=disable")
 	if err != nil {
 		log.Fatal(err)
 	}

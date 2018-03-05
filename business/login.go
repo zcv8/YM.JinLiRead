@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/zcv8/YM.JinLiRead/common"
+	"github.com/zcv8/YM.JinLiRead/data"
 	"net/http"
 )
 
@@ -22,6 +23,7 @@ func Login(wr http.ResponseWriter, r *http.Request) {
 	password := r.PostFormValue("password")
 	ischecked := r.PostFormValue("checked")
 	md5Password := common.EncryptionMD5(password)
+
 	if !common.ValidEmail(username) && !common.ValidPhone(username) {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
