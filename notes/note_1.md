@@ -39,6 +39,11 @@
 - 6.2 使用Godep依赖管理工具管理Go项目，并调整了Go项目的文件结构
 - 6.3 需要将项目签出到src/github.com/zcv8/ 目录下，然后使用 `go get github.com/tools/godep` 安装godep工具，安装成功之后就会在bin目录下出现godep的可执行文件。具体使用方式可以运行‘godep help’命令查看
 
+### 7.使用Postgresql数据库实现对登录注册实现（更新于2018.03.06）
+- 7.1 使用'github.com/lib/pq'驱动连接远程云服务器数据库Postgresql
+- 7.2 实现登录和注册业务的相关逻辑
+
+
 
 
 
