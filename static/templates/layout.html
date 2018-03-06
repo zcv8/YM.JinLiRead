@@ -38,7 +38,7 @@
                         <a class="nav-link" href="#">购物车</a>
                     </li>
                     <li class="nav-item dropdown" v-if="isLogin">
-                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">拂晓</a>
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-text="username">拂晓</a>
                         <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                             <a class="dropdown-item" href="#">个人中心</a>
                             <a class="dropdown-item" href="#">设置</a>
@@ -139,7 +139,8 @@
             registerUserName: "",
             registerPassword: "",
             registerCode: "",
-            registerMessage: ""
+            registerMessage: "",
+            username:""
         },
         methods: {
             initLoginDialog: function() {
@@ -222,9 +223,37 @@
                     $("#code").addClass("input-error");
                     return;
                 }
-                this.isLogin = true;
-                $("#CloseModel").click();
-                this.initRegisterInfo();
+                $.post("/api/register", {
+                    "username": this.registerUserName,
+                    "password": this.registerPassword,
+                    "verifyValue":this.registerCode,
+                    "id":this.verifyId
+                },function(data){
+                    data = JSON.parse(data)
+                    if (data.Status == "success") {
+                        app.isLogin = true;
+                        $("#CloseModel").click();
+                        app.initRegisterInfo();
+                        app.username = data.Data.Email=="NULL"?data.Data.Phone:data.Data.Email;
+                    }
+                    else {
+                        if (data.ErrCode == "ErrorFormatter") {
+                            app.registerMessage = "请输入正确的登录邮箱/手机号";
+                            $("#exampleInputEmail2").addClass("input-error");
+                        } else if (data.ErrCode == "Too Long") {
+                            app.registerMessage = "请输入6-16位密码,区分大小写";
+                            $("#exampleInputPassword2").addClass("input-error");
+                        } else if (data.ErrCode == "Verify Code Error"){
+                            app.registerMessage = "验证码验证失败";
+                            $("#code").addClass("input-error");
+                        } else if(data.ErrCode == "Exist"){
+                            app.registerMessage = "注册用户已经存在";
+                        } else if(data.ErrCode == "Insert Failed"){
+                            app.registerMessage = "注册失败，请重新尝试";
+                        }
+                        app.getVerifycode();
+                    }
+                });
             },
             toggleLogin: function() {
                 this.isLoginTab = true;

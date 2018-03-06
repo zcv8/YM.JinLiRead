@@ -3,7 +3,7 @@ package validation
 import (
 	"encoding/json"
 	"github.com/mojocn/base64Captcha"
-	"log"
+	_ "log"
 	"net/http"
 )
 
@@ -65,27 +65,12 @@ func GenerateCaptchaHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 // base64Captcha verify http handler
-func CaptchaVerifyHandler(w http.ResponseWriter, r *http.Request) {
+func CaptchaVerifyHandler(w http.ResponseWriter, r *http.Request) bool {
 
-	//parse request parameters
-	//接收客户端发送来的请求参数
-	decoder := json.NewDecoder(r.Body)
-	var postParameters ConfigJsonBody
-	err := decoder.Decode(&postParameters)
-	if err != nil {
-		log.Println(err)
-	}
-	defer r.Body.Close()
+	id := r.PostFormValue("id")
+	verifyValue := r.PostFormValue("verifyValue")
 	//verify the captcha
 	//比较图像验证码
-	verifyResult := base64Captcha.VerifyCaptcha(postParameters.Id, postParameters.VerifyValue)
-
-	//set json response
-	//设置json响应
-	w.Header().Set("Content-Type", "application/json; charset=utf-8")
-	body := map[string]interface{}{"code": "error", "data": "验证失败", "msg": "captcha failed"}
-	if verifyResult {
-		body = map[string]interface{}{"code": "success", "data": "验证通过", "msg": "captcha verified"}
-	}
-	json.NewEncoder(w).Encode(body)
+	verifyResult := base64Captcha.VerifyCaptcha(id, verifyValue)
+	return verifyResult
 }
