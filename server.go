@@ -18,6 +18,10 @@ func main() {
 	mux.HandleFunc("/api/login", business.Login)
 	//注册
 	mux.HandleFunc("/api/register", business.Register)
+	//登出
+	mux.HandleFunc("/api/logout", business.Logout)
+	//验证登录
+	mux.HandleFunc("/api/validLoginStatus", business.ValidLoginStatus)
 	mux.HandleFunc("/", indexHandler)
 
 	sever := &http.Server{

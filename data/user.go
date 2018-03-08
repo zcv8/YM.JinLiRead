@@ -27,6 +27,13 @@ func GetUser(username string) (user User, err error) {
 	return
 }
 
+//根据用户根据用户Id
+func GetUserById(uid int) (user User, err error) {
+	user = User{}
+	err = Db.QueryRow("select ID , Email, Phone,Password,CreateTime from Users where ID =$1", uid).Scan(&user.ID, &user.Email, &user.Phone, &user.Password, &user.CreateTime)
+	return
+}
+
 //插入用户
 func InsertUser(username string, password string) (user User, err error) {
 	user = User{}

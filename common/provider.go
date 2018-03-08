@@ -94,6 +94,14 @@ func (provider *Provider) SessionRead(sid string, saveTime int64) (Session, erro
 	return nil, nil
 }
 
+//实现自有的重载 SessionRead 方法
+func (provider *Provider) OverSessionRead(sid string) (Session, error) {
+	if element, ok := provider.sessions[sid]; ok {
+		return element.Value.(*SessionStore), nil
+	}
+	return nil, nil
+}
+
 //实现ProviderOperate 的 SessionDestroy 方法
 func (provider *Provider) SessionDestroy(sid string) error {
 	provider.lock.Lock()

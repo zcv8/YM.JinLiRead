@@ -189,6 +189,7 @@
                     data = JSON.parse(data)
                     if (data.Status == "success") {
                         app.isLogin = true;
+                        app.username = data.Data.Email=="NULL"?data.Data.Phone:data.Data.Email;
                         $("#CloseModel").click();
                         app.initLoginInfo();
                     }
@@ -206,7 +207,22 @@
                 });
             },
             logout: function() {
-                this.isLogin = false;
+                $.post("/api/logout",{},function(data){
+                    app.username = data.Data.Email=="NULL"?data.Data.Phone:data.Data.Email;
+                    app.isLogin = false;
+                });
+            },
+            validlogin:function(){
+                $.post("/api/validLoginStatus",{},function(data){
+                    data = JSON.parse(data)
+                    console.log(data)
+                    if (data.Status == "success") {
+                        app.username = data.Data.Email=="NULL"?data.Data.Phone:data.Data.Email;
+                        app.isLogin = true;
+                    }else{
+                        console.log(data.ErrorCode)
+                    }
+                });
             },
             register: function() {
                 this.initRegisterStyle();
@@ -275,6 +291,7 @@
             }
         }
     });
+    app.validlogin();
     </script>
 </body>
 

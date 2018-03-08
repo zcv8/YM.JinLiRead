@@ -63,6 +63,16 @@ func (manager *SessionManager) SessionStart(w http.ResponseWriter, r *http.Reque
 	return
 }
 
+//读取Session
+func (manager *SessionManager) SessionRead(w http.ResponseWriter, r *http.Request) (session Session, err error) {
+	cookie, err := r.Cookie(manager.cookieName)
+	if err == nil && cookie.Value != "" {
+		sid, _ := url.QueryUnescape(cookie.Value)
+		session, _ = manager.provider.OverSessionRead(sid)
+	}
+	return
+}
+
 //销毁Session
 func (manager *SessionManager) SessionDestroy(w http.ResponseWriter, r *http.Request) {
 	cookie, err := r.Cookie(AuthorizationKey)

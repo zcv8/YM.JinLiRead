@@ -43,15 +43,16 @@ func Login(wr http.ResponseWriter, r *http.Request) {
 		return
 	}
 	user, err := data.GetUser(username)
-	if err != nil && md5Password == user.Password {
+	if err == nil && md5Password == user.Password {
 		tempTime := 0
 		if ischecked == "on" {
 			tempTime = 7 * 24 * 3600
 		}
-		Manager.SessionStart(wr, r, int64(tempTime))
+		session := Manager.SessionStart(wr, r, int64(tempTime))
+		session.Set(session.SessionID(), user.ID)
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "success",
-			Data:    nil,
+			Data:    user,
 			ErrCode: "",
 		})
 		fmt.Fprint(wr, string(rtr))
@@ -123,4 +124,40 @@ func Register(w http.ResponseWriter, r *http.Request) {
 	})
 	fmt.Fprint(w, string(rtr))
 	return
+}
+
+//处理登出业务
+func Logout(w http.ResponseWriter, r *http.Request) {
+	Manager.SessionDestroy(w, r)
+}
+
+//验证登录状态
+func ValidLoginStatus(w http.ResponseWriter, r *http.Request) {
+	session, _ := Manager.SessionRead(w, r)
+	if session == nil {
+		rtr, _ := json.Marshal(&common.ReturnStatus{
+			Status:  "failed",
+			Data:    nil,
+			ErrCode: "INVALID_SESSION",
+		})
+		fmt.Fprint(w, string(rtr))
+		return
+	}
+	userId := session.Get(session.SessionID()).(int)
+	user, err1 := data.GetUserById(userId)
+	if err1 != nil {
+		rtr, _ := json.Marshal(&common.ReturnStatus{
+			Status:  "failed",
+			Data:    nil,
+			ErrCode: "INVALID_SESSION",
+		})
+		fmt.Fprint(w, string(rtr))
+		return
+	}
+	rtr, _ := json.Marshal(&common.ReturnStatus{
+		Status:  "success",
+		Data:    user,
+		ErrCode: "",
+	})
+	fmt.Fprint(w, string(rtr))
 }
