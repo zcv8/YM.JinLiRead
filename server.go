@@ -24,6 +24,12 @@ func main() {
 	mux.HandleFunc("/api/validLoginStatus", business.ValidLoginStatus)
 	mux.HandleFunc("/", indexHandler)
 
+	//编辑文章
+	//mux.HandleFunc("/api/article/edit", articleEditHandler)
+	//创建文章
+	//mux.HandleFunc("/api/article/create", articleCreateHandler)
+	mux.HandleFunc("/article/create", articleCreateHandler)
+
 	sever := &http.Server{
 		Addr:    "0.0.0.0:8000",
 		Handler: mux,
@@ -38,4 +44,13 @@ func indexHandler(wr http.ResponseWriter, r *http.Request) {
 	}
 	temps := template.Must(template.ParseFiles(templates...))
 	temps.ExecuteTemplate(wr, "layout", "")
+}
+
+func articleCreateHandler(w http.ResponseWriter, r *http.Request) {
+	templates := []string{
+		"static/templates/layout.html",
+		"static/templates/article/articleCreate.html",
+	}
+	temps := template.Must(template.ParseFiles(templates...))
+	temps.ExecuteTemplate(w, "layout", "")
 }

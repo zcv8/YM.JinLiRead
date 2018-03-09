@@ -43,6 +43,12 @@
 - 7.1 使用`github.com/lib/pq`驱动连接远程云服务器数据库Postgresql
 - 7.2 实现登录和注册业务的相关逻辑
 
+### 8.添加文章创建页面及其样式（更新于2018.03.09）
+- 8.1 使用`editor.md`作为文章的编辑器
+
+> 参考：https://pandao.github.io/editor.md/index.html
+
+
 
 
 
