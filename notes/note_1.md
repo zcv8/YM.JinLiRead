@@ -43,6 +43,11 @@
 - 7.1 使用'github.com/lib/pq'驱动连接远程云服务器数据库Postgresql
 - 7.2 实现登录和注册业务的相关逻辑
 
+### 8.使用Delve进行Debug Go程序
+- 8.1 使用Delve代替log的方式，实现对程序的调试
+
+> 参考：https://github.com/derekparker/delve?spm=a2c4e.11153959.blogcont57578.4.24c5266eNCm09t
+> 中文博客：https://yq.aliyun.com/articles/57578
 
 
 
