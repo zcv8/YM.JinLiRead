@@ -131,6 +131,15 @@ func Logout(w http.ResponseWriter, r *http.Request) {
 	Manager.SessionDestroy(w, r)
 }
 
+//验证登录状态，仅供接口使用
+func IsLogin(w http.ResponseWriter, r *http.Request) (session common.Session, status bool) {
+	session, _ = Manager.SessionRead(w, r)
+	if session == nil {
+		return nil, false
+	}
+	return session, true
+}
+
 //验证登录状态
 func ValidLoginStatus(w http.ResponseWriter, r *http.Request) {
 	session, _ := Manager.SessionRead(w, r)
