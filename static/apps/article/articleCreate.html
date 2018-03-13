@@ -1,4 +1,3 @@
-{{ define "content" }}
 <link rel="stylesheet" href="/static/js/editor.md/css/editormd.min.css" />
 <nav aria-label="breadcrumb">
     <ol class="breadcrumb" style="background:none;padding-left:0rem;">
@@ -16,10 +15,10 @@
             </select>
         </div>
         <div class="form-group col-md-8">
-            <input type="text" class="form-control" placeholder="文章标题" id="inputCity">
+            <input type="text" class="form-control" placeholder="文章标题" id="inputTitle">
         </div>
         <div class="form-group col-md-2" style="text-align: center;">
-            <button type="button" onclick="create()" class="btn btn-primary"><i class="icon ion-android-checkmark-circle"></i> 发布文章</button>
+            <button type="button" class="btn btn-primary"><i class="icon ion-android-checkmark-circle"></i> 发布文章</button>
         </div>
     </div>
     <div class="form-group">
@@ -30,7 +29,7 @@
 </form>
 <script src="/static/js/editor.md/editormd.min.js"></script>
 <script type="text/javascript">
-    var editor
+var editor
 $(function() {
      editor = editormd("editormd", {
         id: "editormd",
@@ -39,9 +38,4 @@ $(function() {
         saveHTMLToTextarea : true
     });
 });
-function create(){
-        console.log(editor.getMarkdown())
-        return false
-    }
 </script>
-{{ end }}
