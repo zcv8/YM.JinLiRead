@@ -43,7 +43,7 @@
 - 7.1 使用`github.com/lib/pq`驱动连接远程云服务器数据库Postgresql
 - 7.2 实现登录和注册业务的相关逻辑
 
-### 8.使用Delve进行Debug Go程序
+### 8.使用Delve进行Debug Go程序（更新于2018.03.07）
 - 8.1 使用Delve代替log的方式，实现对程序的调试
 
 > 参考：https://github.com/derekparker/delve?spm=a2c4e.11153959.blogcont57578.4.24c5266eNCm09t
@@ -54,7 +54,7 @@
 
 > 参考：https://pandao.github.io/editor.md/index.html
 
-### 10.抽取前端展示逻辑（更新于2018.03.09）
+### 10.抽取前端展示逻辑（更新于2018.03.14）
 - 10.1 整理项目为SPA程序，抽取前端业务逻辑到单独的项目
 - 10.2 使用 Vue + Webpack 重构抽掉出来的前端项目
 
