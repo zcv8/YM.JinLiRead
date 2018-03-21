@@ -7,6 +7,7 @@ import (
 	"github.com/zcv8/YM.JinLiRead/data"
 	"github.com/zcv8/YM.JinLiRead/validation"
 	"net/http"
+	_"log"
 )
 
 //全局的Session管理器
