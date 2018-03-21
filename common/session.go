@@ -6,6 +6,7 @@ import (
 	"net/url"
 	"sync"
 	"time"
+	_"log"
 )
 
 //用户登录的CookieName
