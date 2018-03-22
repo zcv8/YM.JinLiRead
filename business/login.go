@@ -60,7 +60,7 @@ func Login(wr http.ResponseWriter, r *http.Request) {
 	} else {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
-			Data:    nil,
+			Data:    err,
 			ErrCode: "Authentication Failed",
 		})
 		fmt.Fprint(wr, string(rtr))
@@ -112,7 +112,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		}
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
-			Data:    nil,
+			Data:    err,
 			ErrCode: errCode,
 		})
 		fmt.Fprint(w, string(rtr))

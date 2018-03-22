@@ -15,7 +15,6 @@ func AccessControlAllowOrigin(h http.HandlerFunc)http.HandlerFunc{
 		h(w,r)
 	}
 }
-
 //身份识别验证器
 func Authentication(h http.HandlerFunc)http.HandlerFunc{
 	return func(w http.ResponseWriter,r *http.Request){

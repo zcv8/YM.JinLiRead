@@ -20,7 +20,7 @@ func main() {
 	//注册
 	mux.HandleFunc("/api/register", business.AccessControlAllowOrigin(business.Register))
 	//登出
-	mux.HandleFunc("/api/logout", business.Authentication(business.AccessControlAllowOrigin(business.Logout)))
+	mux.HandleFunc("/api/logout", business.AccessControlAllowOrigin(business.Authentication(business.Logout)))
 	//验证登录
 	mux.HandleFunc("/api/validLoginStatus", business.AccessControlAllowOrigin(business.ValidLoginStatus))
 
