@@ -20,7 +20,6 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 		//错误处理
 		if r := recover(); r != nil {
 			log.Print("Error Type:%T", r)
-
 		}
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
