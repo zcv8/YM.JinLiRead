@@ -45,7 +45,7 @@ func Login(wr http.ResponseWriter, r *http.Request) {
 	}
 	user, err := data.GetUser(username)
 	if err == nil && md5Password == user.Password {
-		tempTime := 0
+		tempTime := 3600
 		if ischecked == "on" {
 			tempTime = 7 * 24 * 3600
 		}
@@ -55,6 +55,8 @@ func Login(wr http.ResponseWriter, r *http.Request) {
 			Status:  "success",
 			Data:    user,
 			ErrCode: "",
+			Cookie:fmt.Sprintf("%s=%s;Path=/; Domain=lovemoqing.com;Max-Age=%d",
+				common.AuthorizationKey,session.SessionID(),tempTime),
 		})
 		fmt.Fprint(wr, string(rtr))
 	} else {
@@ -118,10 +120,14 @@ func Register(w http.ResponseWriter, r *http.Request) {
 		fmt.Fprint(w, string(rtr))
 		return
 	}
+	session := Manager.SessionStart(w, r, int64(3600))
+	session.Set(session.SessionID(), user.ID)
 	rtr, _ := json.Marshal(&common.ReturnStatus{
 		Status:  "success",
 		Data:    user,
 		ErrCode: "",
+		Cookie:fmt.Sprintf("%s=%s;Path=/; Domain=lovemoqing.com;Max-Age=%d",
+			common.AuthorizationKey,session.SessionID(),3600),
 	})
 	fmt.Fprint(w, string(rtr))
 	return
@@ -130,6 +136,14 @@ func Register(w http.ResponseWriter, r *http.Request) {
 //处理登出业务
 func Logout(w http.ResponseWriter, r *http.Request) {
 	Manager.SessionDestroy(w, r)
+	rtr, _ := json.Marshal(&common.ReturnStatus{
+		Status:  "success",
+		Data:   "",
+		ErrCode: "INVALID_SESSION",
+		Cookie:fmt.Sprintf("%s='';Path=/; Domain=lovemoqing.com;Max-Age=-1",
+			common.AuthorizationKey),
+	})
+	fmt.Fprint(w, string(rtr))
 }
 
 //验证登录状态，仅供接口使用

@@ -83,10 +83,6 @@ func (manager *SessionManager) SessionDestroy(w http.ResponseWriter, r *http.Req
 		defer manager.lock.Unlock()
 		sid, _ := url.QueryUnescape(cookie.Value)
 		manager.provider.SessionDestroy(sid)
-		expiration := time.Now()
-		//销毁Session之后需要将浏览器的Cookie设置为立即过期，也就是过期时间设置为过去的一个时间
-		cookie = &http.Cookie{Name: manager.cookieName, Domain:".lovemoqing.com", Path: "/", HttpOnly: false, Expires: expiration, MaxAge: -1}
-		http.SetCookie(w,cookie)
 	}
 	return
 }

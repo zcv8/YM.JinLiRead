@@ -5,4 +5,5 @@ type ReturnStatus struct {
 	Status  string
 	Data    interface{}
 	ErrCode string
+	Cookie  string
 }
