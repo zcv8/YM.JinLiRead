@@ -14,4 +14,4 @@
 .glide/
 
 #github
-server.exe
+*.bin
