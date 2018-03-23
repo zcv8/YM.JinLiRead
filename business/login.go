@@ -6,6 +6,7 @@ import (
 	"github.com/zcv8/YM.JinLiRead/common"
 	"github.com/zcv8/YM.JinLiRead/data"
 	"github.com/zcv8/YM.JinLiRead/validation"
+	"github.com/julienschmidt/httprouter"
 	"net/http"
 	_"log"
 )
@@ -20,7 +21,7 @@ func init() {
 }
 
 //处理登录业务
-func Login(wr http.ResponseWriter, r *http.Request) {
+func Login(wr http.ResponseWriter, r *http.Request,_ httprouter.Params) {
 	username := r.PostFormValue("username")
 	password := r.PostFormValue("password")
 	ischecked := r.PostFormValue("checked")
@@ -70,7 +71,7 @@ func Login(wr http.ResponseWriter, r *http.Request) {
 }
 
 //处理注册业务
-func Register(w http.ResponseWriter, r *http.Request) {
+func Register(w http.ResponseWriter, r *http.Request,_ httprouter.Params) {
 	username := r.PostFormValue("username")
 	password := r.PostFormValue("password")
 	md5Password := common.EncryptionMD5(password)
@@ -134,7 +135,7 @@ func Register(w http.ResponseWriter, r *http.Request) {
 }
 
 //处理登出业务
-func Logout(w http.ResponseWriter, r *http.Request) {
+func Logout(w http.ResponseWriter, r *http.Request,_ httprouter.Params) {
 	Manager.SessionDestroy(w, r)
 	rtr, _ := json.Marshal(&common.ReturnStatus{
 		Status:  "success",
@@ -156,7 +157,7 @@ func IsLogin(w http.ResponseWriter, r *http.Request) (session common.Session, st
 }
 
 //验证登录状态
-func ValidLoginStatus(w http.ResponseWriter, r *http.Request) {
+func ValidLoginStatus(w http.ResponseWriter, r *http.Request,_ httprouter.Params) {
 	session, _ := Manager.SessionRead(w, r)
 	if session == nil {
 		rtr, _ := json.Marshal(&common.ReturnStatus{

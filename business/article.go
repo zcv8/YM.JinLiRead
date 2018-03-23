@@ -9,13 +9,14 @@ import (
 	"fmt"
 	"github.com/zcv8/YM.JinLiRead/common"
 	"github.com/zcv8/YM.JinLiRead/data"
+	"github.com/julienschmidt/httprouter"
 	_"log"
 	"net/http"
 	"strconv"
 )
 
 //创建文章
-func CreateArticle(w http.ResponseWriter, r *http.Request) {
+func CreateArticle(w http.ResponseWriter, r *http.Request,_ httprouter.Params) {
 	defer func() {
 		//错误处理
 		if r := recover(); r != nil {

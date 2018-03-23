@@ -5,20 +5,21 @@ import(
 	"fmt"
 	"encoding/json"
 	"github.com/zcv8/YM.JinLiRead/common"
+	"github.com/julienschmidt/httprouter"
 )
 
 //跨域请求包装器
-func AccessControlAllowOrigin(h http.HandlerFunc)http.HandlerFunc{
-	return func(w http.ResponseWriter,r *http.Request){
+func AccessControlAllowOrigin(h httprouter.Handle)httprouter.Handle{
+	return func(w http.ResponseWriter,r *http.Request,ps httprouter.Params){
 		w.Header().Set("Access-Control-Allow-Origin", "http://vue.lovemoqing.com") 
 		w.Header().Set("Access-Control-Allow-Headers","Cookie,Origin, X-Requested-With, Content-Type, Accept")
 		w.Header().Set("P3P","CP=\"CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR\"")
-		h(w,r)
+		h(w,r,ps)
 	}
 }
 //身份识别验证器
-func Authentication(h http.HandlerFunc)http.HandlerFunc{
-	return func(w http.ResponseWriter,r *http.Request){
+func Authentication(h httprouter.Handle)httprouter.Handle{
+	return func(w http.ResponseWriter,r *http.Request,ps httprouter.Params){
 		cookie,err:= r.Cookie(common.AuthorizationKey)
 		isPass:=false
 		if(err==nil&&cookie.Value!=""){
@@ -28,7 +29,7 @@ func Authentication(h http.HandlerFunc)http.HandlerFunc{
 			}
 		}
 		if(isPass){
-			h(w,r)
+			h(w,r,ps)
 		} else{
 			rtr,_:=json.Marshal(&common.ReturnStatus{
 				Status:  "failed",

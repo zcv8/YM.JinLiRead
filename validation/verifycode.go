@@ -3,6 +3,7 @@ package validation
 import (
 	"encoding/json"
 	"github.com/mojocn/base64Captcha"
+	"github.com/julienschmidt/httprouter"
 	_ "log"
 	"net/http"
 )
@@ -16,7 +17,7 @@ type ConfigJsonBody struct {
 	ConfigDigit     base64Captcha.ConfigDigit
 }
 
-func GenerateCaptchaHandler(w http.ResponseWriter, r *http.Request) {
+func GenerateCaptchaHandler(w http.ResponseWriter, r *http.Request,_ httprouter.Params) {
 	r.ParseForm()
 	var postParameters = ConfigJsonBody{
 		CaptchaType: "character",
