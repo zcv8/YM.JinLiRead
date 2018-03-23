@@ -7,6 +7,9 @@ import (
 	"net/http"
 )
 
+//还需要完成的事情：
+//		1. 依赖注入：可参考 .net 依赖注入框架的源码实现
+//		2. 全局注册拦截器：对每一次请求都可以实现请求之前和请求之后做一些操作
 
 
 func main() {
@@ -21,8 +24,10 @@ func main() {
 	mux.HandleFunc("/api/register", business.AccessControlAllowOrigin(business.Register))
 	//登出
 	mux.HandleFunc("/api/logout", business.AccessControlAllowOrigin(business.Authentication(business.Logout)))
-	//验证登录
+	//验证登录状态
 	mux.HandleFunc("/api/validLoginStatus", business.AccessControlAllowOrigin(business.ValidLoginStatus))
+	//创建文章
+	mux.HandleFunc("/api/article/create",business.AccessControlAllowOrigin(business.Authentication(business.CreateArticle)))
 
 	sever := &http.Server{
 		Addr:    "0.0.0.0:8000",

@@ -9,7 +9,7 @@ import (
 	"fmt"
 	"github.com/zcv8/YM.JinLiRead/common"
 	"github.com/zcv8/YM.JinLiRead/data"
-	"log"
+	_"log"
 	"net/http"
 	"strconv"
 )
@@ -19,22 +19,21 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	defer func() {
 		//错误处理
 		if r := recover(); r != nil {
-			log.Print("Error Type:%T", r)
+			rtr, _ := json.Marshal(&common.ReturnStatus{
+				Status:  "failed",
+				Data:    r,
+				ErrCode: "Insert Failed",
+			})
+			fmt.Fprint(w, string(rtr))
+			return
 		}
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
-			Data:    "",
-			ErrCode: "Insert Failed",
-		})
-		fmt.Fprint(w, string(rtr))
-		return
 	}()
 
 	session, res := IsLogin(w, r)
 	if !res {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
-			Data:    "",
+			Data:    res,
 			ErrCode: "INVALID_SESSION",
 		})
 		fmt.Fprint(w, string(rtr))
@@ -48,7 +47,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request) {
 	if err != nil {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
-			Data:    "",
+			Data:    err,
 			ErrCode: "Insert Failed",
 		})
 		fmt.Fprint(w, string(rtr))

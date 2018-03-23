@@ -48,16 +48,6 @@ func (manager *SessionManager) SessionStart(w http.ResponseWriter, r *http.Reque
 	if err != nil || cookie.Value == "" {
 		sid := GetGuid()
 		session, _ = manager.provider.SessionInit(sid, saveTime)
-		cookie = &http.Cookie{
-			Name:     AuthorizationKey,
-			Value:    url.QueryEscape(sid),
-			Path:     "/",
-			Domain:	  ".lovemoqing.com",
-			HttpOnly: false,
-			MaxAge:   int(manager.maxLifeTime),
-		}
-		http.SetCookie(w, cookie)
-
 	} else {
 		sid, _ := url.QueryUnescape(cookie.Value)
 		session, _ = manager.provider.SessionRead(sid, saveTime)
