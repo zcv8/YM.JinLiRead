@@ -62,6 +62,7 @@
 - 11.1 前端实现过程：
 
 （1）使用`vue-resource`进行对请求拦截，在请求之前加上`request.credentials=true;`,从而可以实现在请求的时候请求头中带Cookie。
+
 （2）同样使用拦截器，拦截返回的请求，如果请求中存在Cookie字段，则使用`document.cookie`实现将Cookie信息存储到浏览器
 - 11.2 后台实现过程：
 
@@ -71,6 +72,7 @@
 		w.Header().Set("Access-Control-Allow-Origin", "http://vue.lovemoqing.com") 
 		w.Header().Set("Access-Control-Allow-Headers","Cookie,Origin, X-Requested-With, Content-Type, Accept")
 	```
+	
  (2) 在需要返回的Cookie的请求中，将拼接好的cookie字符串返回给前端
  
 
