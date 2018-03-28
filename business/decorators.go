@@ -11,7 +11,7 @@ import(
 //跨域请求包装器
 func AccessControlAllowOrigin(h httprouter.Handle)httprouter.Handle{
 	return func(w http.ResponseWriter,r *http.Request,ps httprouter.Params){
-		w.Header().Set("Access-Control-Allow-Origin", "http://vue.lovemoqing.com") 
+		w.Header().Set("Access-Control-Allow-Origin", "*") 
 		w.Header().Set("Access-Control-Allow-Headers","Cookie,Origin, X-Requested-With, Content-Type, Accept")
 		w.Header().Set("P3P","CP=\"CURa ADMa DEVa PSAo PSDo OUR BUS UNI PUR INT DEM STA PRE COM NAV OTC NOI DSP COR\"")
 		h(w,r,ps)

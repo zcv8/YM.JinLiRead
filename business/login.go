@@ -51,14 +51,14 @@ func Login(wr http.ResponseWriter, r *http.Request,_ httprouter.Params) {
 		if ischecked == "on" {
 			tempTime = 7 * 24 * 3600
 		}
-		user.LastLoginIP =""
+		user.LastLoginIP =r.RemoteAddr
 		user.LastLoginTime=time.Now()
 		err = data.UpdateUserLastLogin(user.ID,user.LastLoginIP,user.LastLoginTime)
 		if err!=nil{
 			rtr, _ := json.Marshal(&common.ReturnStatus{
 				Status:  "failed",
 				Data:    user,
-				ErrCode: "update login error",
+				ErrCode: "update login info error",
 				Cookie:"",
 			})
 			fmt.Fprint(wr, string(rtr))
@@ -136,15 +136,28 @@ func Register(w http.ResponseWriter, r *http.Request,_ httprouter.Params) {
 		return
 	}
 	session := Manager.SessionStart(w, r, int64(3600))
-	session.Set(session.SessionID(), user.ID)
-	rtr, _ := json.Marshal(&common.ReturnStatus{
-		Status:  "success",
-		Data:    user,
-		ErrCode: "",
-		Cookie:fmt.Sprintf("%s=%s;Path=/; Domain=lovemoqing.com;Max-Age=%d",
-			common.AuthorizationKey,session.SessionID(),3600),
-	})
-	fmt.Fprint(w, string(rtr))
+	user.LastLoginIP =r.RemoteAddr
+	user.LastLoginTime=time.Now()
+	err = data.UpdateUserLastLogin(user.ID,user.LastLoginIP,user.LastLoginTime)
+	if err!=nil{
+		rtr, _ := json.Marshal(&common.ReturnStatus{
+			Status:  "failed",
+			Data:    user,
+			ErrCode: "update login info error",
+			Cookie:"",
+		})
+		fmt.Fprint(w, string(rtr))
+	}else{
+		session.Set(session.SessionID(), user.ID)
+		rtr, _ := json.Marshal(&common.ReturnStatus{
+			Status:  "success",
+			Data:    user,
+			ErrCode: "",
+			Cookie:fmt.Sprintf("%s=%s;Path=/; Domain=lovemoqing.com;Max-Age=%d",
+				common.AuthorizationKey,session.SessionID(),3600),
+		})
+		fmt.Fprint(w, string(rtr))
+	}
 	return
 }
 
