@@ -1,7 +1,7 @@
 package business
 
 /*
- * 处理有关文章的业务
+ * 处理文章有关的业务逻辑
  */
 
 import (

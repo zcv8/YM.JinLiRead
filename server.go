@@ -29,7 +29,9 @@ func main() {
 	router.GET("/api/validLoginStatus", business.AccessControlAllowOrigin(business.ValidLoginStatus))
 	//创建文章
 	router.POST("/api/article/create",business.AccessControlAllowOrigin(business.Authentication(business.CreateArticle)))
-	
+	//获取频道标签
+	router.GET("/api/channels",business.AccessControlAllowOrigin(business.GetChannels))
+
 	sever := &http.Server{
 		Addr:    "0.0.0.0:8000",
 		Handler: router,
