@@ -17,7 +17,10 @@ type User struct {
 	Phone      string
 	Password   string
 	State      int
+	LastLoginIP string
+	LastLoginTime time.Time
 	CreateTime time.Time
+	VerifyCode string
 }
 
 //获取用户根据用户名
@@ -53,5 +56,17 @@ func InsertUser(username string, password string) (user User, err error) {
 	} else {
 		err = stmt.QueryRow("NULL", username, password, time.Now(), 0).Scan(&user.ID, &user.Email, &user.Phone)
 	}
+	return
+}
+
+//更新用户最后一次登录的信息
+func UpdateUserLastLogin(uid int,ip string,loginTime time.Time)(err error){
+	defer func(){
+		if r:=recover();r!=nil{
+			err= errors.New("update error")
+		}
+	}()
+	stmt,err:= Db.Prepare("UPDATE users SET lastloginip=$2,lastlogintime=$3 WHERE id = $1")
+	stmt.QueryRow(uid, ip,time.Now())
 	return
 }

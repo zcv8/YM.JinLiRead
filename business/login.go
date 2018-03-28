@@ -1,6 +1,7 @@
 package business
 
 import (
+	"time"
 	"encoding/json"
 	"fmt"
 	"github.com/zcv8/YM.JinLiRead/common"
@@ -50,16 +51,29 @@ func Login(wr http.ResponseWriter, r *http.Request,_ httprouter.Params) {
 		if ischecked == "on" {
 			tempTime = 7 * 24 * 3600
 		}
-		session := Manager.SessionStart(wr, r, int64(tempTime))
-		session.Set(session.SessionID(), user.ID)
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "success",
-			Data:    user,
-			ErrCode: "",
-			Cookie:fmt.Sprintf("%s=%s;Path=/; Domain=lovemoqing.com;Max-Age=%d",
-				common.AuthorizationKey,session.SessionID(),tempTime),
-		})
-		fmt.Fprint(wr, string(rtr))
+		user.LastLoginIP =""
+		user.LastLoginTime=time.Now()
+		err = data.UpdateUserLastLogin(user.ID,user.LastLoginIP,user.LastLoginTime)
+		if err!=nil{
+			rtr, _ := json.Marshal(&common.ReturnStatus{
+				Status:  "failed",
+				Data:    user,
+				ErrCode: "update login error",
+				Cookie:"",
+			})
+			fmt.Fprint(wr, string(rtr))
+		}else{
+			session := Manager.SessionStart(wr, r, int64(tempTime))
+			session.Set(session.SessionID(), user.ID)
+			rtr, _ := json.Marshal(&common.ReturnStatus{
+				Status:  "success",
+				Data:    user,
+				ErrCode: "",
+				Cookie:fmt.Sprintf("%s=%s;Path=/; Domain=lovemoqing.com;Max-Age=%d",
+					common.AuthorizationKey,session.SessionID(),tempTime),
+			})
+			fmt.Fprint(wr, string(rtr))
+		}
 	} else {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
