@@ -7,16 +7,17 @@ package business
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/zcv8/YM.JinLiRead/common"
-	"github.com/zcv8/YM.JinLiRead/data"
-	"github.com/julienschmidt/httprouter"
-	_"log"
+	_ "log"
 	"net/http"
 	"strconv"
+
+	"github.com/julienschmidt/httprouter"
+	"github.com/zcv8/YM.JinLiRead/common"
+	"github.com/zcv8/YM.JinLiRead/data"
 )
 
 //创建文章
-func CreateArticle(w http.ResponseWriter, r *http.Request,_ httprouter.Params) {
+func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	defer func() {
 		//错误处理
 		if r := recover(); r != nil {
@@ -41,10 +42,15 @@ func CreateArticle(w http.ResponseWriter, r *http.Request,_ httprouter.Params) {
 		return
 	}
 	userId := session.Get(session.SessionID()).(int)
+	//这里可以重构，变成模型的Valid方法，或者使用工厂根据typeid或者是statusid获取对应值
 	title := r.PostFormValue("title")
 	content := r.PostFormValue("content")
 	typeId, _ := strconv.Atoi(r.PostFormValue("typeId"))
-	article, err := data.InsertArticle(title, content, typeId, userId)
+	statusId, _ := strconv.Atoi(r.PostFormValue("statusId"))
+	channelId, _ := strconv.Atoi(r.PostFormValue("channelId"))
+	labels := r.PostFormValue("labels")
+	article, err := data.InsertArticle(title, content,
+		data.Channel{ID: channelId}, labels, typeId, statusId, data.User{ID: userId})
 	if err != nil {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
