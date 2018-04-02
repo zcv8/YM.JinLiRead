@@ -66,8 +66,8 @@ func InsertArticle(title, content string, channel Channel,
 func GetArticles(pageIndex int, pageSize int,
 	typeId int) (articles []Article, err error) {
 	articles = make([]Article, 0)
-	sql := "select * from articles where type=$1 "
-	rows, err := Db.Query(sql, typeId)
+	sql := "select * from articles where type=$1 limit $2 offset $3"
+	rows, err := Db.Query(sql, typeId, pageSize, (pageIndex-1)*pageSize)
 	if err != nil {
 		return
 	}
