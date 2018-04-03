@@ -68,3 +68,38 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	fmt.Fprint(w, string(rtr))
 	return
 }
+
+//根据频道ID获取文章
+func GetArticlesByTypeId(w http.ResponseWriter, r *http.Request, args httprouter.Params) {
+	defer func() {
+		if r := recover(); r != nil {
+			rtr, _ := json.Marshal(&common.ReturnStatus{
+				Status:  "failed",
+				Data:    r,
+				ErrCode: "An error occurred",
+			})
+			fmt.Fprint(w, string(rtr))
+		}
+	}()
+
+	channelId, _ := strconv.Atoi(args.ByName("channelId"))
+	pageIndex, _ := strconv.Atoi(r.FormValue("pageIndex"))
+	pageSize, _ := strconv.Atoi(r.FormValue("pageSize"))
+	articles, err := data.GetArticles(pageIndex, pageSize, channelId)
+	if err != nil {
+		rtr, _ := json.Marshal(&common.ReturnStatus{
+			Status:  "failed",
+			Data:    err,
+			ErrCode: "An error occurred",
+		})
+		fmt.Fprint(w, string(rtr))
+		return
+	}
+	rtr, _ := json.Marshal(&common.ReturnStatus{
+		Status:  "success",
+		Data:    articles,
+		ErrCode: "",
+	})
+	fmt.Fprint(w, string(rtr))
+	return
+}

@@ -6,6 +6,7 @@ package data
 
 import (
 	_ "encoding/json"
+	"strconv"
 	"time"
 )
 
@@ -29,7 +30,7 @@ type Article struct {
 	Title      string    `json:"title"`
 	Content    string    `json:"content"`
 	Channel    Channel   `json:"channel"`
-	Labels     string    `json:"lables"`
+	Labels     string    `json:"labels"`
 	Type       int       `json:"type"`
 	Status     int       `json:"status"`
 	CreateUser User      `json:"user"`
@@ -62,18 +63,33 @@ func InsertArticle(title, content string, channel Channel,
 	return
 }
 
-//根据类型获取文章
+//根据频道ID获取文章
 func GetArticles(pageIndex int, pageSize int,
-	typeId int) (articles []Article, err error) {
+	channelId int) (articles []Article, err error) {
 	articles = make([]Article, 0)
-	sql := "select * from articles where type=$1 limit $2 offset $3"
-	rows, err := Db.Query(sql, typeId, pageSize, (pageIndex-1)*pageSize)
+	where := ""
+	if channelId > 0 {
+		where = "where article.channelid=" + strconv.Itoa(channelId)
+	}
+	sql := `select article.id,article.title,article.content,article.updatetime,article.labels,article.status,
+	article.type,article.readcount,channel.name ,u.email from articles AS article 
+	join channels  AS channel on article.channelid = channel.id
+	join users AS u on article.createuser = u.id ` + where + ` order by article.createtime desc limit $1 offset $2`
+	rows, err := Db.Query(sql, pageSize, (pageIndex-1)*pageSize)
 	if err != nil {
 		return
 	}
 	for rows.Next() {
 		article := Article{}
-		rows.Scan(&article)
+		channel := Channel{}
+		user := User{}
+		article.Channel = channel
+		article.CreateUser = user
+		rows.Scan(&article.ID, &article.Title,
+			&article.Content, &article.UpdateTime, &article.Labels,
+			&article.Status, &article.Type,
+			&article.ReadCount,
+			&article.Channel.Name, &article.CreateUser.Email)
 		articles = append(articles, article)
 	}
 	return
