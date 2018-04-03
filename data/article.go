@@ -53,7 +53,7 @@ func InsertArticle(title, content string, channel Channel,
 		CreateTime: time.Now(),
 		UpdateTime: time.Now(),
 	}
-	sql := `insert into articles(title,content,channelid,lables,type,status,createuser) values($1,$2,$3,$4,$5,$6,$7) returning id`
+	sql := `insert into articles(title,content,channelid,labels,type,status,createuser) values($1,$2,$3,$4,$5,$6,$7) returning id`
 	stmt, err := Db.Prepare(sql)
 	if err != nil {
 		return
