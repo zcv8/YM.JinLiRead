@@ -7,7 +7,6 @@ package business
 import (
 	"encoding/json"
 	"fmt"
-	_ "log"
 	"net/http"
 	"strconv"
 
@@ -94,6 +93,14 @@ func GetArticlesByTypeId(w http.ResponseWriter, r *http.Request, args httprouter
 		})
 		fmt.Fprint(w, string(rtr))
 		return
+	}
+	for index, value := range articles {
+		vlen := len(value.Content)
+		if vlen > 200 {
+			articles[index].Content = value.Content[0:200] + "..."
+		} else {
+			articles[index].Content = value.Content + "..."
+		}
 	}
 	rtr, _ := json.Marshal(&common.ReturnStatus{
 		Status:  "success",

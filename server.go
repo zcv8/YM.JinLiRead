@@ -33,7 +33,8 @@ func main() {
 	router.GET("/api/articles/:channelId", business.AccessControlAllowOrigin(business.GetArticlesByTypeId))
 	//获取频道标签
 	router.GET("/api/channels", business.AccessControlAllowOrigin(business.GetChannels))
-
+	//上传文章图片
+	router.POST("/api/articles/upload", business.AccessControlAllowOrigin(business.UploadArticleImage))
 	sever := &http.Server{
 		Addr:    "0.0.0.0:8000",
 		Handler: router,
