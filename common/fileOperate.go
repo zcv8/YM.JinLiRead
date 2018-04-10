@@ -2,8 +2,10 @@ package common
 
 import (
 	"errors"
+	"io"
 	"os"
 	"path/filepath"
+	"strings"
 )
 
 const (
@@ -73,6 +75,42 @@ func MoveFile(sPath string, tPath string) error {
 	return err
 }
 
+//获取文件的目录
+func GetFileDir(fileName string) (dir string, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("get file dir error")
+		}
+	}()
+	sArr := strings.Split(fileName, "/")
+	sArrLength := len(sArr)
+	tStr := strings.Join(sArr[:sArrLength-2], "/")
+	return tStr, nil
+}
+
+//获取文件的扩展名
+func GetFileExtendName(fileName string) (extendName string, err error) {
+	defer func() {
+		if r := recover(); r != nil {
+			err = errors.New("get file extendName error")
+		}
+	}()
+	if fileName == "" {
+		return "", errors.New("file name is null")
+	}
+	sArr := strings.Split(fileName, "/")
+	sArrLength := len(sArr)
+	tStr := ""
+	if sArrLength >= 2 {
+		tStr = strings.Join(sArr[sArrLength-2:], "")
+	} else {
+		tStr = sArr[0]
+	}
+	fileNameInfo := strings.Split(tStr, ".")
+	extendName = fileNameInfo[1]
+	return extendName, nil
+}
+
 //读取文件内容
 func ReadFile(fileName string) (bytes []byte, err error) {
 	bytes = make([]byte, 0)
@@ -90,6 +128,12 @@ func WriteFile(fileName string, bytes []byte) error {
 	fi, err := OpenOrCreateFile(fileName)
 	defer fi.Close()
 	_, err = fi.Write(bytes)
+	return err
+}
+
+//拷贝文件流
+func FileStreamCopy(t io.Writer, s io.Reader) error {
+	_, err := io.Copy(t, s)
 	return err
 }
 
@@ -120,26 +164,29 @@ func CreateDir(path string) error {
 
 //获取临时文件夹
 func GetTempDir() (path string, err error) {
-	return getPath(tempDir)
+	path, err = GetPath(tempDir)
+	return
 }
 
 //获取草稿文件夹
 func GetDraftDir() (path string, err error) {
-	return getPath(draftDir)
+	path, err = GetPath(draftDir)
+	return
 }
 
 //获取永久文件夹
 func GetPermDir() (path string, err error) {
-	return getPath(permDir)
+	path, err = GetPath(permDir)
+	return
 }
 
 //获取制定文件夹路径
-func getPath(name string) (path string, err error) {
-	err = CreateDir(path)
+func GetPath(name string) (path string, err error) {
+	err = CreateDir(name)
 	if err != nil {
 		return "", err
 	}
 	//获取文件夹的绝对路径
-	path, err = filepath.Abs(path)
+	path, err = filepath.Abs(name)
 	return
 }
