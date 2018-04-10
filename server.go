@@ -35,6 +35,7 @@ func main() {
 	router.GET("/api/articles/:channelId", business.GetArticlesByTypeId)
 	//获取频道标签
 	router.GET("/api/channels", business.GetChannels)
+
 	sever := &http.Server{
 		Addr:    "0.0.0.0:8000",
 		Handler: router,
