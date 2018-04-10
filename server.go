@@ -29,12 +29,12 @@ func main() {
 	router.GET("/api/validLoginStatus", business.AccessControlAllowOrigin(business.ValidLoginStatus))
 	//创建文章
 	router.POST("/api/article/create", business.AccessControlAllowOrigin(business.Authentication(business.CreateArticle)))
+	//上传文章图片
+	router.POST("/api/uploadarticleimg", business.AccessControlAllowOrigin(business.UploadArticleImage))
 	//根据频道ID获取文章
 	router.GET("/api/articles/:channelId", business.AccessControlAllowOrigin(business.GetArticlesByTypeId))
 	//获取频道标签
 	router.GET("/api/channels", business.AccessControlAllowOrigin(business.GetChannels))
-	//上传文章图片
-	router.POST("/api/articles/upload", business.AccessControlAllowOrigin(business.UploadArticleImage))
 	sever := &http.Server{
 		Addr:    "0.0.0.0:8000",
 		Handler: router,
