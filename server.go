@@ -18,23 +18,23 @@ func main() {
 
 	router := httprouter.New()
 	//创建图像验证码api
-	router.GET("/api/getCaptcha", business.AccessControlAllowOrigin(validation.GenerateCaptchaHandler))
+	router.GET("/api/getCaptcha", validation.GenerateCaptchaHandler)
 	//验证登录
-	router.POST("/api/login", business.AccessControlAllowOrigin(business.Login))
+	router.POST("/api/login", business.Login)
 	//注册
-	router.POST("/api/register", business.AccessControlAllowOrigin(business.Register))
+	router.POST("/api/register", business.Register)
 	//登出
-	router.GET("/api/logout", business.AccessControlAllowOrigin(business.Authentication(business.Logout)))
+	router.GET("/api/logout", business.Authentication(business.Logout))
 	//验证登录状态
-	router.GET("/api/validLoginStatus", business.AccessControlAllowOrigin(business.ValidLoginStatus))
+	router.GET("/api/validLoginStatus", business.ValidLoginStatus)
 	//创建文章
-	router.POST("/api/article/create", business.AccessControlAllowOrigin(business.Authentication(business.CreateArticle)))
+	router.POST("/api/article/create", business.Authentication(business.CreateArticle))
 	//上传文章图片
-	router.POST("/api/uploadarticleimg", business.AccessControlAllowOrigin(business.UploadArticleImage))
+	router.POST("/api/uploadarticleimg", business.UploadArticleImage)
 	//根据频道ID获取文章
-	router.GET("/api/articles/:channelId", business.AccessControlAllowOrigin(business.GetArticlesByTypeId))
+	router.GET("/api/articles/:channelId", business.GetArticlesByTypeId)
 	//获取频道标签
-	router.GET("/api/channels", business.AccessControlAllowOrigin(business.GetChannels))
+	router.GET("/api/channels", business.GetChannels)
 	sever := &http.Server{
 		Addr:    "0.0.0.0:8000",
 		Handler: router,
