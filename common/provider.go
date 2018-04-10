@@ -91,7 +91,6 @@ func (provider *Provider) SessionRead(sid string, saveTime int64) (Session, erro
 		sess, err := provider.SessionInit(sid, saveTime)
 		return sess, err
 	}
-	return nil, nil
 }
 
 //实现自有的重载 SessionRead 方法
@@ -148,5 +147,5 @@ func (provider *Provider) SessionUpdate(sid string) error {
 
 func init() {
 	pder.sessions = make(map[string]*list.Element, 0)
-	Register("memory", *pder)
+	Register("memory", pder)
 }

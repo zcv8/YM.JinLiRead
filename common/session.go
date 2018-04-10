@@ -2,11 +2,11 @@ package common
 
 import (
 	"fmt"
+	_ "log"
 	"net/http"
 	"net/url"
 	"sync"
 	"time"
-	_"log"
 )
 
 //用户登录的CookieName
@@ -16,14 +16,14 @@ const AuthorizationKey = "AUTHORIZATIONKEY"
 type SessionManager struct {
 	cookieName  string
 	lock        sync.Mutex
-	provider    Provider
+	provider    *Provider
 	maxLifeTime int64
 }
 
-var provides = make(map[string]Provider)
+var provides = make(map[string]*Provider)
 
 //注册Provider
-func Register(name string, provider Provider) {
+func Register(name string, provider *Provider) {
 	if _, dup := provides[name]; dup {
 		panic("session: Register called twice for provider " + name)
 	}
