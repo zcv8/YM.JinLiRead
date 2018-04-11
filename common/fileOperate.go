@@ -113,9 +113,12 @@ func GetFileExtendName(fileName string) (extendName string, err error) {
 
 //读取文件内容
 func ReadFile(fileName string) (bytes []byte, err error) {
-	bytes = make([]byte, 0)
 	fi, err := OpenOrCreateFile(fileName)
 	defer fi.Close()
+	buf_len, _ := fi.Seek(0, os.SEEK_END)
+	//获取buf_len后把文件指针重新定位于文件开始
+	fi.Seek(0, os.SEEK_SET)
+	bytes = make([]byte, buf_len)
 	if err != nil {
 		return bytes, err
 	}
@@ -143,7 +146,7 @@ func IsExists(name string) bool {
 	_, err := os.Stat(name)
 	//没有错误说明文件存在
 	if err == nil {
-		return false
+		return true
 	}
 	//如果发生错误，则使用对应的方法判断是不是由于文件不存在引起的错误
 	isExists := os.IsExist(err)
@@ -164,29 +167,35 @@ func CreateDir(path string) error {
 
 //获取临时文件夹
 func GetTempDir() (path string, err error) {
-	path, err = GetPath(tempDir)
+	path, err = GetOrCreatePath(tempDir)
 	return
 }
 
 //获取草稿文件夹
 func GetDraftDir() (path string, err error) {
-	path, err = GetPath(draftDir)
+	path, err = GetOrCreatePath(draftDir)
 	return
 }
 
 //获取永久文件夹
 func GetPermDir() (path string, err error) {
-	path, err = GetPath(permDir)
+	path, err = GetOrCreatePath(permDir)
 	return
 }
 
-//获取制定文件夹路径
-func GetPath(name string) (path string, err error) {
+//获取或者是创建制定文件夹路径
+func GetOrCreatePath(name string) (path string, err error) {
 	err = CreateDir(name)
 	if err != nil {
 		return "", err
 	}
 	//获取文件夹的绝对路径
+	path, err = filepath.Abs(name)
+	return
+}
+
+//获取文件路径
+func GetPath(name string) (path string, err error) {
 	path, err = filepath.Abs(name)
 	return
 }

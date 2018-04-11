@@ -1,11 +1,13 @@
 package main
 
 import (
+	"fmt"
 	_ "log"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/zcv8/YM.JinLiRead/business"
+	"github.com/zcv8/YM.JinLiRead/common"
 	"github.com/zcv8/YM.JinLiRead/validation"
 )
 
@@ -17,6 +19,8 @@ import (
 func main() {
 
 	router := httprouter.New()
+	//静态文件访问
+	router.GET("/static/*fileName", staticHandler)
 	//创建图像验证码api
 	router.GET("/api/getCaptcha", validation.GenerateCaptchaHandler)
 	//验证登录
@@ -41,4 +45,40 @@ func main() {
 		Handler: router,
 	}
 	sever.ListenAndServe()
+}
+
+var fileType = map[string]string{
+	"png":  "image/png",
+	"jpg":  "image/jpg",
+	"jpeg": "image/jpeg",
+	"gif":  "image/gif",
+}
+
+//处理静态文件
+func staticHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) {
+	fileName := p.ByName("fileName")
+	path, err := common.GetPath("./files" + fileName)
+	if err != nil {
+		w.WriteHeader(404)
+		fmt.Fprint(w, err)
+		return
+	}
+	bytes, err := common.ReadFile(path)
+	if err != nil {
+		w.WriteHeader(404)
+		fmt.Fprint(w, err)
+		return
+	}
+	extendName, err := common.GetFileExtendName(fileName)
+	if err != nil {
+		w.WriteHeader(404)
+		fmt.Fprint(w, err)
+		return
+	}
+	responseType, ok := fileType[extendName]
+	if !ok {
+		responseType = "text/plain"
+	}
+	w.Header().Add("Content-Type", responseType)
+	w.Write(bytes)
 }

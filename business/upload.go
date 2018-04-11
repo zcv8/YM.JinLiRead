@@ -49,8 +49,9 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 		return
 	}
 	//创建新的文件名
-	newFileName := tempDir + common.GetGuid() + "." + extendName
-	fi, err := common.OpenOrCreateFile(newFileName)
+	newFileName := common.GetGuid() + "." + extendName
+	newFilePath := tempDir + "/" + newFileName
+	fi, err := common.OpenOrCreateFile(newFilePath)
 	if err != nil {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
@@ -73,7 +74,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	}
 	rtr, _ := json.Marshal(&common.ReturnStatus{
 		Status:  "success",
-		Data:    newFileName,
+		Data:    "/static/temps/" + newFileName,
 		ErrCode: "",
 	})
 	fmt.Fprint(w, string(rtr))
