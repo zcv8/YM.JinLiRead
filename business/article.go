@@ -8,6 +8,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"regexp"
 	"strconv"
 
 	"github.com/julienschmidt/httprouter"
@@ -95,11 +96,23 @@ func GetArticlesByTypeId(w http.ResponseWriter, r *http.Request, args httprouter
 		return
 	}
 	for index, value := range articles {
-		vlen := len(value.Content)
-		if vlen > 200 {
-			articles[index].Content = value.Content[0:200] + "..."
+		//正则匹配替换图片为"[图片]"字样
+		regex, err := regexp.Compile("!\\[.*?\\]\\((http[s]?://.+?\\.(png|jpg|jpeg|bmp|gif))\\)")
+		if err != nil {
+			articles[index].Content = "内容获取失败"
 		} else {
-			articles[index].Content = value.Content + "..."
+			articles[index].Content = regex.ReplaceAllString(value.Content, "[图片]")
+		}
+		vlen := len(articles[index].Content)
+		if vlen > 200 {
+			articles[index].Content = articles[index].Content[0:200] + "..."
+		} else {
+			articles[index].Content = articles[index].Content + "..."
+		}
+		//处理文章首图
+		matchs := regex.FindSubmatch([]byte(value.Content))
+		if len(matchs) > 1 {
+			articles[index].FirstImage = string(matchs[1])
 		}
 	}
 	rtr, _ := json.Marshal(&common.ReturnStatus{

@@ -33,6 +33,7 @@ type Article struct {
 	Labels     string    `json:"labels"`
 	Type       int       `json:"type"`
 	Status     int       `json:"status"`
+	FirstImage string    `json:"image"`
 	CreateUser User      `json:"user"`
 	ReadCount  int       `json:"readcount"`
 	CreateTime time.Time `json:"createtime"`
