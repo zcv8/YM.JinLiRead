@@ -31,8 +31,10 @@ func (errText errorText) String() string {
 	v, ok := errInfos[errText]
 	if ok {
 		//写日志
-		log.Println(fmt.Sprintf("[Error:%s]:%s", v.GetCode(), v.GetText()))
-		log.Println(fmt.Sprintf("[InnerError]:%s", v.GetOrginalErr()))
+		if IfWriteErrLog {
+			log.Println(fmt.Sprintf("[Error:%s]:%s", v.GetCode(), v.GetText()))
+			log.Println(fmt.Sprintf("[InnerError]:%s", v.GetOrginalErr()))
+		}
 		return v.GetCode()
 	}
 	return defaultErrText
