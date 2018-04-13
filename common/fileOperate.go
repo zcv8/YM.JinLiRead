@@ -49,6 +49,15 @@ func CopyFile(sPath string, tPath string) error {
 	if err != nil {
 		return err
 	}
+	targetDir, err := GetFileDir(tPath)
+	if err != nil {
+		return err
+	}
+	//当目标文件不存在的时候，创建该文件
+	err = CreateDir(targetDir)
+	if err != nil {
+		return err
+	}
 	//删除目标文件
 	err = DeleteFile(tPath)
 	if err != nil {

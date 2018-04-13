@@ -10,6 +10,7 @@ import (
 	"net/http"
 	"regexp"
 	"strconv"
+	"strings"
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/zcv8/YM.JinLiRead/common"
@@ -45,6 +46,60 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	//这里可以重构，变成模型的Valid方法，或者使用工厂根据typeid或者是statusid获取对应值
 	title := r.PostFormValue("title")
 	content := r.PostFormValue("content")
+	//处理文章中的图片，替换临时路径为永久路径
+	regex, err := regexp.Compile("!\\[.*?\\]\\((http[s]?://" + common.WebApiDomain + "/static/(.+?\\.(?:re png|jpg|jpeg|bmp|gif)))\\)")
+	if err != nil {
+		rtr, _ := json.Marshal(&common.ReturnStatus{
+			Status:  "failed",
+			Data:    err,
+			ErrCode: "Insert Failed",
+		})
+		fmt.Fprint(w, string(rtr))
+		return
+	}
+	imageUrls := regex.FindAllStringSubmatch(content, -1)
+	for _, value := range imageUrls {
+		if len(value) > 2 {
+			targetUrl := value[2]
+			//移动文件的路径到永久保存路径
+			if strings.Index(targetUrl, "temps/") == 0 {
+				targetUrl = strings.Replace(targetUrl, "temps/", "", 0)
+				tempDir, err := common.GetTempDir()
+				if err != nil {
+					rtr, _ := json.Marshal(&common.ReturnStatus{
+						Status:  "failed",
+						Data:    err,
+						ErrCode: "Insert Failed",
+					})
+					fmt.Fprint(w, string(rtr))
+					return
+				}
+				imagePath := tempDir + targetUrl
+				permDir, err := common.GetPermDir()
+				if err != nil {
+					rtr, _ := json.Marshal(&common.ReturnStatus{
+						Status:  "failed",
+						Data:    err,
+						ErrCode: "Insert Failed",
+					})
+					fmt.Fprint(w, string(rtr))
+					return
+				}
+				err = common.MoveFile(imagePath, permDir+targetUrl)
+				if err != nil {
+					rtr, _ := json.Marshal(&common.ReturnStatus{
+						Status:  "failed",
+						Data:    err,
+						ErrCode: "Insert Failed",
+					})
+					fmt.Fprint(w, string(rtr))
+					return
+				}
+				//将新的路径替换老的路径
+				content = strings.Replace(content, targetUrl, strings.Replace(targetUrl, "temps/", "perms/", 0), 0)
+			}
+		}
+	}
 	typeId, _ := strconv.Atoi(r.PostFormValue("typeId"))
 	statusId, _ := strconv.Atoi(r.PostFormValue("statusId"))
 	channelId, _ := strconv.Atoi(r.PostFormValue("channelId"))
