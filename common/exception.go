@@ -2,7 +2,6 @@ package common
 
 import (
 	"fmt"
-	"log"
 )
 
 /*
@@ -12,8 +11,9 @@ import (
 //错误的文本枚举类型
 type errorText string
 
+var IfWriteErrLog bool = true //默认设置为错误书写日志
+
 const (
-	IfWriteErrLog             bool      = true //默认设置为错误书写日志
 	defaultErrText            string    = "error is not registered"
 	InvalidSessionError       errorText = "innerInvalidSessionError"
 	InvalidFormatterError     errorText = "innerInvalidFormatterError"
@@ -30,10 +30,12 @@ const (
 func (errText errorText) String() string {
 	v, ok := errInfos[errText]
 	if ok {
-		//写日志
 		if IfWriteErrLog {
-			log.Println(fmt.Sprintf("[Error:%s]:%s", v.GetCode(), v.GetText()))
-			log.Println(fmt.Sprintf("[InnerError]:%s", v.GetOrginalErr()))
+			Info(fmt.Sprintf("<%s>:%s", v.GetCode(), v.GetText()))
+			originalError := v.GetOrginalErr()
+			if v.GetOrginalErr() != nil {
+				Info(fmt.Sprintf("<OriginalError>:%s", originalError))
+			}
 		}
 		return v.GetCode()
 	}
@@ -126,14 +128,14 @@ type innerExistingDataError struct{ errInfo }
 type innerReadDataFailedError struct{ errInfo }
 
 //全局错误管理器，根据错误文本映射到内部错误
-var errInfos map[errorText]errInterface
+var errInfos = make(map[errorText]errInterface)
 
 //初始化函数，注册内部错误到全局错误管理器
 func init() {
 	errInfos[InvalidSessionError] = &innerInvalidSessionError{
 		errInfo: errInfo{
 			text: "Invalid session",
-			code: "InvalidSession",
+			code: "INVALID_SESSION",
 		},
 	}
 	errInfos[InvalidFormatterError] = &innerInvalidFormatterError{
