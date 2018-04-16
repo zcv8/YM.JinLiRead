@@ -65,7 +65,7 @@ func InsertArticle(title, content string, channel Channel,
 }
 
 //根据频道ID获取文章
-func GetArticles(pageIndex int, pageSize int,
+func GetArticlesByChannel(pageIndex int, pageSize int,
 	channelId int) (articles []Article, err error) {
 	articles = make([]Article, 0)
 	where := ""
@@ -73,7 +73,7 @@ func GetArticles(pageIndex int, pageSize int,
 		where = "where article.channelid=" + strconv.Itoa(channelId)
 	}
 	sql := `select article.id,article.title,article.content,article.updatetime,article.labels,article.status,
-	article.type,article.readcount,channel.name ,u.email from articles AS article 
+	article.type,article.readcount,channel.id,channel.name ,u.id,u.username from articles AS article 
 	join channels  AS channel on article.channelid = channel.id
 	join users AS u on article.createuser = u.id ` + where + ` order by article.createtime desc limit $1 offset $2`
 	rows, err := Db.Query(sql, pageSize, (pageIndex-1)*pageSize)
@@ -90,8 +90,29 @@ func GetArticles(pageIndex int, pageSize int,
 			&article.Content, &article.UpdateTime, &article.Labels,
 			&article.Status, &article.Type,
 			&article.ReadCount,
-			&article.Channel.Name, &article.CreateUser.Email)
+			&article.Channel.ID, &article.Channel.Name, &article.CreateUser.ID, &article.CreateUser.UserName)
 		articles = append(articles, article)
+	}
+	return
+}
+
+//根据文章ID获取文章
+func GetArticlesById(id int) (article Article, err error) {
+	article = Article{}
+	channel := Channel{}
+	user := User{}
+	article.Channel = channel
+	article.CreateUser = user
+	err = Db.QueryRow(`select article.id,article.title,article.content,article.updatetime,article.labels,article.status,
+		article.type,article.readcount,channel.id, channel.name ,u.id,u.username from articles AS article 
+		join channels  AS channel on article.channelid = channel.id
+		join users AS u on article.createuser = u.id where article.id=$1`, id).Scan(&article.ID, &article.Title,
+		&article.Content, &article.UpdateTime, &article.Labels,
+		&article.Status, &article.Type,
+		&article.ReadCount,
+		&article.Channel.ID, &article.Channel.Name, &article.CreateUser.ID, &article.CreateUser.UserName)
+	if err != nil {
+		return
 	}
 	return
 }

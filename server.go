@@ -38,7 +38,9 @@ func main() {
 	//上传文章图片
 	router.POST("/api/uploadarticleimg", business.UploadArticleImage)
 	//根据频道ID获取文章
-	router.GET("/api/articles/:channelId", business.GetArticlesByTypeId)
+	router.GET("/api/channels/:channelId/articles", business.GetArticlesByChannel)
+	//根据文章ID获取文章
+	router.GET("/api/articles/:Id", business.GetArticlesById)
 	//获取频道标签
 	router.GET("/api/channels", business.GetChannels)
 
