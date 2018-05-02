@@ -3,85 +3,36 @@
 	"GoVersion": "go1.9",
 	"GodepVersion": "v80",
 	"Packages": [
-		"github.com/go-xorm/xorm"
+		"github.com/mojocn/base64Captcha"
 	],
 	"Deps": [
 		{
-			"ImportPath": "github.com/davecgh/go-spew/spew",
-			"Comment": "v1.1.0-12-g8991bc2",
-			"Rev": "8991bc29aa16c548c550c7ff78260e27b9ab7c73"
+			"ImportPath": "github.com/golang/freetype",
+			"Comment": "release-137-ge2365df",
+			"Rev": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
 		},
 		{
-			"ImportPath": "github.com/denisenkom/go-mssqldb",
-			"Rev": "e32faac87a2220f9342289f2c3b567d1424b8ec5"
+			"ImportPath": "github.com/golang/freetype/raster",
+			"Comment": "release-137-ge2365df",
+			"Rev": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
 		},
 		{
-			"ImportPath": "github.com/denisenkom/go-mssqldb/internal/cp",
-			"Rev": "e32faac87a2220f9342289f2c3b567d1424b8ec5"
+			"ImportPath": "github.com/golang/freetype/truetype",
+			"Comment": "release-137-ge2365df",
+			"Rev": "e2365dfdc4a05e4b8299a783240d4a7d5a65d4e4"
 		},
 		{
-			"ImportPath": "github.com/go-sql-driver/mysql",
-			"Comment": "v1.3-60-g3287d94",
-			"Rev": "3287d94d4c6a48a63e16fffaabf27ab20203af2a"
+			"ImportPath": "github.com/mojocn/base64Captcha",
+			"Comment": "v1.09",
+			"Rev": "7d0b78ad1685f79a0fea381c107d77ec1f812500"
 		},
 		{
-			"ImportPath": "github.com/go-xorm/builder",
-			"Comment": "v0.1.0-10-gbad0a61",
-			"Rev": "bad0a612f0d6277b953910822ab5dfb30dd18237"
+			"ImportPath": "golang.org/x/image/font",
+			"Rev": "f315e440302883054d0c2bd85486878cb4f8572c"
 		},
 		{
-			"ImportPath": "github.com/go-xorm/core",
-			"Comment": "v0.5.8",
-			"Rev": "f43c33d9a48db006417a7ac4c16b08897e3e1458"
-		},
-		{
-			"ImportPath": "github.com/go-xorm/xorm",
-			"Comment": "v0.6.6-8-gae0364a",
-			"Rev": "ae0364a057c1e5e05c157efe20783e970b5d74ca"
-		},
-		{
-			"ImportPath": "github.com/lib/pq",
-			"Comment": "go1.0-cutoff-203-g88edab0",
-			"Rev": "88edab0803230a3898347e77b474f8c1820a1f20"
-		},
-		{
-			"ImportPath": "github.com/lib/pq/oid",
-			"Comment": "go1.0-cutoff-203-g88edab0",
-			"Rev": "88edab0803230a3898347e77b474f8c1820a1f20"
-		},
-		{
-			"ImportPath": "github.com/mattn/go-sqlite3",
-			"Comment": "v1.6.0-33-ga72efd6",
-			"Rev": "a72efd674f654961a11ac41aae72c0e43963fe6c"
-		},
-		{
-			"ImportPath": "github.com/pmezard/go-difflib/difflib",
-			"Comment": "v1.0.0",
-			"Rev": "792786c7400a136282c1664665ae0a8db921c6c2"
-		},
-		{
-			"ImportPath": "github.com/stretchr/testify/assert",
-			"Comment": "v1.2.1-14-gc679ae2",
-			"Rev": "c679ae2cc0cb27ec3293fea7e254e47386f05d69"
-		},
-		{
-			"ImportPath": "github.com/ziutek/mymysql/godrv",
-			"Comment": "v1.5.4-27-gff6cc86",
-			"Rev": "ff6cc86d3d933e6c0e3185a19fb46e171a7651b2"
-		},
-		{
-			"ImportPath": "github.com/ziutek/mymysql/mysql",
-			"Comment": "v1.5.4-27-gff6cc86",
-			"Rev": "ff6cc86d3d933e6c0e3185a19fb46e171a7651b2"
-		},
-		{
-			"ImportPath": "github.com/ziutek/mymysql/native",
-			"Comment": "v1.5.4-27-gff6cc86",
-			"Rev": "ff6cc86d3d933e6c0e3185a19fb46e171a7651b2"
-		},
-		{
-			"ImportPath": "golang.org/x/crypto/md4",
-			"Rev": "2c241ca3045ddc354463c376a9515d9f1f1390a4"
+			"ImportPath": "golang.org/x/image/math/fixed",
+			"Rev": "f315e440302883054d0c2bd85486878cb4f8572c"
 		}
 	]
 }
