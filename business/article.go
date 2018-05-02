@@ -24,8 +24,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 		if r := recover(); r != nil {
 			rtr, _ := json.Marshal(&common.ReturnStatus{
 				Status:  "failed",
-				Data:    r,
-				ErrCode: "Insert Failed",
+				Data:    nil,
+				ErrCode: common.InsertDataFailedError.SetText(r.(string)).String(),
 			})
 			fmt.Fprint(w, string(rtr))
 			return
@@ -36,8 +36,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	if !res {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
-			Data:    res,
-			ErrCode: "INVALID_SESSION",
+			Data:    nil,
+			ErrCode: common.InvalidSessionError.String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -51,8 +51,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	if err != nil {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
-			Data:    err,
-			ErrCode: "Insert Failed",
+			Data:    nil,
+			ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -68,8 +68,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 				if err != nil {
 					rtr, _ := json.Marshal(&common.ReturnStatus{
 						Status:  "failed",
-						Data:    err,
-						ErrCode: "Insert Failed",
+						Data:    nil,
+						ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
 					})
 					fmt.Fprint(w, string(rtr))
 					return
@@ -79,8 +79,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 				if err != nil {
 					rtr, _ := json.Marshal(&common.ReturnStatus{
 						Status:  "failed",
-						Data:    err,
-						ErrCode: "Insert Failed",
+						Data:    nil,
+						ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
 					})
 					fmt.Fprint(w, string(rtr))
 					return
@@ -89,8 +89,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 				if err != nil {
 					rtr, _ := json.Marshal(&common.ReturnStatus{
 						Status:  "failed",
-						Data:    err,
-						ErrCode: "Insert Failed",
+						Data:    nil,
+						ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
 					})
 					fmt.Fprint(w, string(rtr))
 					return
@@ -109,8 +109,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	if err != nil {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
-			Data:    err,
-			ErrCode: "Insert Failed",
+			Data:    nil,
+			ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -130,8 +130,8 @@ func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httproute
 		if r := recover(); r != nil {
 			rtr, _ := json.Marshal(&common.ReturnStatus{
 				Status:  "failed",
-				Data:    r,
-				ErrCode: "An error occurred",
+				Data:    nil,
+				ErrCode: common.ReadDataFailedError.SetText(r.(string)).String(),
 			})
 			fmt.Fprint(w, string(rtr))
 		}
@@ -144,8 +144,8 @@ func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
-			Data:    err,
-			ErrCode: "An error occurred",
+			Data:    nil,
+			ErrCode: common.ReadDataFailedError.SetOrginalErr(err).String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -185,8 +185,8 @@ func GetArticlesById(w http.ResponseWriter, r *http.Request, args httprouter.Par
 		if r := recover(); r != nil {
 			rtr, _ := json.Marshal(&common.ReturnStatus{
 				Status:  "failed",
-				Data:    r,
-				ErrCode: "An error occurred",
+				Data:    nil,
+				ErrCode: common.ReadDataFailedError.SetText(r.(string)).String(),
 			})
 			fmt.Fprint(w, string(rtr))
 		}
@@ -197,8 +197,8 @@ func GetArticlesById(w http.ResponseWriter, r *http.Request, args httprouter.Par
 	if err != nil {
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
-			Data:    err,
-			ErrCode: "An error occurred",
+			Data:    nil,
+			ErrCode: common.ReadDataFailedError.SetOrginalErr(err).String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return

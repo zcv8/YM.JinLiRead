@@ -124,9 +124,9 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if err != nil {
 		var errCode string
 		if err.Error() == "Exist" {
-			errCode = common.ExistingDataError.String()
+			errCode = common.ExistingDataError.SetOrginalErr(err).String()
 		} else {
-			errCode = common.InsertDataFailedError.String()
+			errCode = common.InsertDataFailedError.SetOrginalErr(err).String()
 		}
 		rtr, _ := json.Marshal(&common.ReturnStatus{
 			Status:  "failed",
@@ -167,7 +167,7 @@ func Logout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	Manager.SessionDestroy(w, r)
 	rtr, _ := json.Marshal(&common.ReturnStatus{
 		Status:  "success",
-		Data:    "",
+		Data:    nil,
 		ErrCode: common.InvalidSessionError.String(),
 		Cookie: fmt.Sprintf("%s='';Path=/; Domain=lovemoqing.com;Max-Age=-1",
 			common.AuthorizationKey),
