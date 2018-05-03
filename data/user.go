@@ -21,21 +21,21 @@ type User struct {
 	State         int
 	LastLoginIP   string
 	LastLoginTime time.Time
-	CreateTime    time.Time
+	CreateTime    time.Time `xorm:"created"`
 	VerifyCode    string
 }
 
 //获取用户根据用户名
 func GetUser(username string) (user User, err error) {
 	user = User{}
-	err = Db.QueryRow("select ID ,UserName, Email, Phone,Password,CreateTime from Users where Email = $1 Or Phone = $1", username).Scan(&user.ID, &user.UserName, &user.Email, &user.Phone, &user.Password, &user.CreateTime)
+	_, err = Db.Where("email=?", username).Or("phone=?", username).Get(&user)
 	return
 }
 
 //根据用户根据用户Id
 func GetUserById(uid int) (user User, err error) {
 	user = User{}
-	err = Db.QueryRow("select ID ,UserName ,Email, Phone,Password,CreateTime from Users where ID =$1", uid).Scan(&user.ID, &user.UserName, &user.Email, &user.Phone, &user.Password, &user.CreateTime)
+	_, err = Db.Id(uid).Get(&user)
 	return
 }
 
@@ -47,28 +47,21 @@ func InsertUser(username string, password string) (user User, err error) {
 		err = errors.New("Exist")
 		return
 	}
-	stmt, errs := Db.Prepare("Insert into users(username,email,phone,password,createTime,state) values ('',$1,$2,$3,$4,$5) returning id,email,phone")
-	defer stmt.Close()
-	if errs != nil {
-		err = errs
-		return
-	}
+	user.Password = password
 	if common.ValidEmail(username) {
-		err = stmt.QueryRow(username, "NULL", password, time.Now(), 0).Scan(&user.ID, &user.Email, &user.Phone)
+		user.Email = username
 	} else {
-		err = stmt.QueryRow("NULL", username, password, time.Now(), 0).Scan(&user.ID, &user.Email, &user.Phone)
+		user.Phone = username
 	}
+	_, err = Db.Insert(&user)
 	return
 }
 
 //更新用户最后一次登录的信息
 func UpdateUserLastLogin(uid int, ip string, loginTime time.Time) (err error) {
-	defer func() {
-		if r := recover(); r != nil {
-			err = errors.New("update error")
-		}
-	}()
-	stmt, err := Db.Prepare("UPDATE users SET lastloginip=$2,lastlogintime=$3 WHERE id = $1")
-	stmt.QueryRow(uid, ip, time.Now())
+	user := User{}
+	user.LastLoginIP = ip
+	user.LastLoginTime = loginTime
+	_, err = Db.Id(uid).Cols("lastloginip", "lastlogintime").Update(&user)
 	return
 }

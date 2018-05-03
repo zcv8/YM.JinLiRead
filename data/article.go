@@ -6,7 +6,6 @@ package data
 
 import (
 	_ "encoding/json"
-	"strconv"
 	"time"
 )
 
@@ -29,15 +28,26 @@ type Article struct {
 	ID         int       `json:"id"`
 	Title      string    `json:"title"`
 	Content    string    `json:"content"`
-	Channel    Channel   `json:"channel"`
+	ChannelId  int       `json:"channel"`
 	Labels     string    `json:"labels"`
 	Type       int       `json:"type"`
 	Status     int       `json:"status"`
 	FirstImage string    `json:"image"`
-	CreateUser User      `json:"user"`
+	CreateUser int       `json:"user"`
 	ReadCount  int       `json:"readcount"`
-	CreateTime time.Time `json:"createtime"`
-	UpdateTime time.Time `json:"updatetime"`
+	CreateTime time.Time `json:"createtime",xorm:"created"`
+	UpdateTime time.Time `json:"updatetime",xorm:"updated"`
+}
+
+//级联查询返回的结构体
+type ArticleInfo struct {
+	User    `xorm:"extends"`
+	Channel `xorm:"extends"`
+	Article `xorm:"extends"`
+}
+
+func (a *ArticleInfo) TableName() string {
+	return "article"
 }
 
 //插入文章
@@ -46,73 +56,43 @@ func InsertArticle(title, content string, channel Channel,
 	article = Article{
 		Title:      title,
 		Content:    content,
-		Channel:    channel,
+		ChannelId:  channel.ID,
 		Labels:     lables,
 		Type:       articleType,
 		Status:     status,
 		ReadCount:  0,
-		CreateUser: user,
+		CreateUser: user.ID,
 		CreateTime: time.Now(),
 		UpdateTime: time.Now(),
 	}
-	sql := `insert into articles(title,content,channelid,labels,type,status,createuser) values($1,$2,$3,$4,$5,$6,$7) returning id`
-	stmt, err := Db.(sql)
-	if err != nil {
-		return
-	}
-	err = stmt.QueryRow(title, content, channel.ID, lables, articleType, status, user.ID).Scan(&article.ID)
+	_, err = Db.Insert(&article)
 	return
 }
 
 //根据频道ID获取文章
 func GetArticlesByChannel(pageIndex int, pageSize int,
-	channelId int) (articles []Article, err error) {
-	articles = make([]Article, 0)
-	where := ""
-	if channelId > 0 {
-		where = "where article.channelid=" + strconv.Itoa(channelId)
+	channelId int) (aInfos []ArticleInfo, err error) {
+	aInfos = make([]ArticleInfo, 0)
+	result := Db.Join("INNER", "user", "user.id=article.createuser").Join("INNER", "channel", "channel.id = article.channelid")
+	if channelId != 0 {
+		result = result.Where("article.channelid=?", channelId)
 	}
-	sql := `select article.id,article.title,article.content,article.updatetime,article.labels,article.status,
-	article.type,article.readcount,channel.id,channel.name ,u.id,u.username from articles AS article 
-	join channels  AS channel on article.channelid = channel.id
-	join users AS u on article.createuser = u.id ` + where + ` order by article.createtime desc limit $1 offset $2`
-	rows, err := Db.Query(sql, pageSize, (pageIndex-1)*pageSize)
-	if err != nil {
-		return
-	}
-	for rows.Next() {
-		article := Article{}
-		channel := Channel{}
-		user := User{}
-		article.Channel = channel
-		article.CreateUser = user
-		rows.Scan(&article.ID, &article.Title,
-			&article.Content, &article.UpdateTime, &article.Labels,
-			&article.Status, &article.Type,
-			&article.ReadCount,
-			&article.Channel.ID, &article.Channel.Name, &article.CreateUser.ID, &article.CreateUser.UserName)
-		articles = append(articles, article)
+	rows, err := result.Limit(pageSize, (pageIndex-1)*pageSize).Rows(&aInfos)
+	defer rows.Close()
+	if err == nil {
+		for rows.Next() {
+			aInfo := ArticleInfo{}
+			rows.Scan(&aInfo)
+			aInfos = append(aInfos, aInfo)
+		}
 	}
 	return
 }
 
 //根据文章ID获取文章
-func GetArticlesById(id int) (article Article, err error) {
-	article = Article{}
-	channel := Channel{}
-	user := User{}
-	article.Channel = channel
-	article.CreateUser = user
-	err = Db.QueryRow(`select article.id,article.title,article.content,article.updatetime,article.labels,article.status,
-		article.type,article.readcount,channel.id, channel.name ,u.id,u.username from articles AS article 
-		join channels  AS channel on article.channelid = channel.id
-		join users AS u on article.createuser = u.id where article.id=$1`, id).Scan(&article.ID, &article.Title,
-		&article.Content, &article.UpdateTime, &article.Labels,
-		&article.Status, &article.Type,
-		&article.ReadCount,
-		&article.Channel.ID, &article.Channel.Name, &article.CreateUser.ID, &article.CreateUser.UserName)
-	if err != nil {
-		return
-	}
+func GetArticlesById(id int) (aInfo ArticleInfo, err error) {
+	aInfo = ArticleInfo{}
+	_, err = Db.Join("INNER", "user", "user.id=article.createuser").Join("INNER", "channel", "channel.id = article.channelid").
+		Where("article.id=?", id).Get(&aInfo)
 	return
 }
