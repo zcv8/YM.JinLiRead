@@ -37,11 +37,6 @@ func (err *baseError) SetText(text string) *baseError {
 	return err
 }
 
-//改变Json的打包方式Json
-func (err *baseError) MarshalJSON() ([]byte, error) {
-	return []byte(err.Text), nil
-}
-
 type applicationInternalError struct {
 	baseError
 	orginalError error
@@ -65,10 +60,6 @@ func (err *applicationInternalError) Error() string {
 		Error(fmt.Sprintf("<OrginalError>:%s", err.orginalError.Error()))
 	}
 	return err.Text
-}
-
-func (err *applicationInternalError) MarshalJSON() ([]byte, error) {
-	return []byte("OK"), nil
 }
 
 type interfaceUsageError struct {
