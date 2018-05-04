@@ -7,6 +7,7 @@ import (
 
 	"github.com/julienschmidt/httprouter"
 	"github.com/zcv8/YM.JinLiRead/common"
+	entity "github.com/zcv8/YM.JinLiRead/entities"
 )
 
 //身份识别验证器
@@ -23,8 +24,8 @@ func Authentication(h httprouter.Handle) httprouter.Handle {
 		if isPass {
 			h(w, r, ps)
 		} else {
-			rtr, _ := json.Marshal(&common.ReturnStatus{
-				Status:  "failed",
+			rtr, _ := json.Marshal(&entity.ResponseStatus{
+				Status:  entity.FAILED,
 				Data:    nil,
 				ErrCode: common.InvalidSessionError.String(),
 			})

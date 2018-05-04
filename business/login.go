@@ -10,6 +10,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/zcv8/YM.JinLiRead/common"
 	"github.com/zcv8/YM.JinLiRead/data"
+	entity "github.com/zcv8/YM.JinLiRead/entities"
 	"github.com/zcv8/YM.JinLiRead/validation"
 )
 
@@ -29,8 +30,8 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	ischecked := r.PostFormValue("checked")
 	md5Password := common.EncryptionMD5(password)
 	if !common.ValidEmail(username) && !common.ValidPhone(username) {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.InvalidFormatterError.String(),
 		})
@@ -38,8 +39,8 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 	if len(password) < 6 || len(password) > 16 {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.StringTooLongError.String(),
 		})
@@ -54,10 +55,10 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		}
 		user.LastLoginIP = r.RemoteAddr
 		user.LastLoginTime = time.Now()
-		err = data.UpdateUserLastLogin(user.ID, user.LastLoginIP, user.LastLoginTime)
+		err = data.UpdateUserLastLogin(user.Id, user.LastLoginIP, user.LastLoginTime)
 		if err != nil {
-			rtr, _ := json.Marshal(&common.ReturnStatus{
-				Status:  "failed",
+			rtr, _ := json.Marshal(&entity.ResponseStatus{
+				Status:  entity.FAILED,
 				Data:    user,
 				ErrCode: common.UpdateDataFailedError.String(),
 				Cookie:  "",
@@ -65,9 +66,9 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 			fmt.Fprint(wr, string(rtr))
 		} else {
 			session := Manager.SessionStart(wr, r, int64(tempTime))
-			session.Set(session.SessionID(), user.ID)
-			rtr, _ := json.Marshal(&common.ReturnStatus{
-				Status:  "success",
+			session.Set(session.SessionID(), user.Id)
+			rtr, _ := json.Marshal(&entity.ResponseStatus{
+				Status:  entity.SUCCEED,
 				Data:    user,
 				ErrCode: "",
 				Cookie: fmt.Sprintf("%s=%s;Path=/; Domain=lovemoqing.com;Max-Age=%d",
@@ -76,8 +77,8 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 			fmt.Fprint(wr, string(rtr))
 		}
 	} else {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    err,
 			ErrCode: common.AuthenticationFailedError.String(),
 		})
@@ -91,8 +92,8 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	password := r.PostFormValue("password")
 	md5Password := common.EncryptionMD5(password)
 	if !common.ValidEmail(username) && !common.ValidPhone(username) {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.InvalidFormatterError.String(),
 		})
@@ -100,8 +101,8 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		return
 	}
 	if len(password) < 6 || len(password) > 16 {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.StringTooLongError.String(),
 		})
@@ -111,8 +112,8 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	res := validation.CaptchaVerifyHandler(w, r)
 	if !res {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.VerificationCodeError.String(),
 		})
@@ -128,8 +129,8 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		} else {
 			errCode = common.InsertDataFailedError.SetOrginalErr(err).String()
 		}
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    err,
 			ErrCode: errCode,
 		})
@@ -139,19 +140,19 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	session := Manager.SessionStart(w, r, int64(3600))
 	user.LastLoginIP = r.RemoteAddr
 	user.LastLoginTime = time.Now()
-	err = data.UpdateUserLastLogin(user.ID, user.LastLoginIP, user.LastLoginTime)
+	err = data.UpdateUserLastLogin(user.Id, user.LastLoginIP, user.LastLoginTime)
 	if err != nil {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    user,
 			ErrCode: common.UpdateDataFailedError.String(),
 			Cookie:  "",
 		})
 		fmt.Fprint(w, string(rtr))
 	} else {
-		session.Set(session.SessionID(), user.ID)
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "success",
+		session.Set(session.SessionID(), user.Id)
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.SUCCEED,
 			Data:    user,
 			ErrCode: "",
 			Cookie: fmt.Sprintf("%s=%s;Path=/; Domain=lovemoqing.com;Max-Age=%d",
@@ -165,8 +166,8 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 //处理登出业务
 func Logout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	Manager.SessionDestroy(w, r)
-	rtr, _ := json.Marshal(&common.ReturnStatus{
-		Status:  "success",
+	rtr, _ := json.Marshal(&entity.ResponseStatus{
+		Status:  entity.SUCCEED,
 		Data:    nil,
 		ErrCode: common.InvalidSessionError.String(),
 		Cookie: fmt.Sprintf("%s='';Path=/; Domain=lovemoqing.com;Max-Age=-1",
@@ -188,8 +189,8 @@ func IsLogin(w http.ResponseWriter, r *http.Request) (session common.Session, st
 func ValidLoginStatus(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	session, _ := Manager.SessionRead(w, r)
 	if session == nil {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.InvalidSessionError.String(),
 		})
@@ -199,16 +200,16 @@ func ValidLoginStatus(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	userId := session.Get(session.SessionID()).(int)
 	user, err1 := data.GetUserById(userId)
 	if err1 != nil {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.InvalidSessionError.String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
 	}
-	rtr, _ := json.Marshal(&common.ReturnStatus{
-		Status:  "success",
+	rtr, _ := json.Marshal(&entity.ResponseStatus{
+		Status:  entity.SUCCEED,
 		Data:    user,
 		ErrCode: "",
 	})

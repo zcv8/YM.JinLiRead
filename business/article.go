@@ -15,6 +15,7 @@ import (
 	"github.com/julienschmidt/httprouter"
 	"github.com/zcv8/YM.JinLiRead/common"
 	"github.com/zcv8/YM.JinLiRead/data"
+	entity "github.com/zcv8/YM.JinLiRead/entities"
 )
 
 //创建文章
@@ -22,8 +23,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	defer func() {
 		//错误处理
 		if r := recover(); r != nil {
-			rtr, _ := json.Marshal(&common.ReturnStatus{
-				Status:  "failed",
+			rtr, _ := json.Marshal(&entity.ResponseStatus{
+				Status:  entity.FAILED,
 				Data:    nil,
 				ErrCode: common.InsertDataFailedError.SetText(r.(string)).String(),
 			})
@@ -34,8 +35,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 
 	session, res := IsLogin(w, r)
 	if !res {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.InvalidSessionError.String(),
 		})
@@ -49,8 +50,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	//处理文章中的图片，替换临时路径为永久路径
 	regex, err := regexp.Compile("!\\[.*?\\]\\((http[s]?://" + common.WebApiDomain + "/static/(.+?\\.(?:re png|jpg|jpeg|bmp|gif)))\\)")
 	if err != nil {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
 		})
@@ -66,8 +67,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 				targetUrl = strings.Replace(targetUrl, "temps/", "", 0)
 				tempDir, err := common.GetTempDir()
 				if err != nil {
-					rtr, _ := json.Marshal(&common.ReturnStatus{
-						Status:  "failed",
+					rtr, _ := json.Marshal(&entity.ResponseStatus{
+						Status:  entity.FAILED,
 						Data:    nil,
 						ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
 					})
@@ -77,8 +78,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 				imagePath := tempDir + targetUrl
 				permDir, err := common.GetPermDir()
 				if err != nil {
-					rtr, _ := json.Marshal(&common.ReturnStatus{
-						Status:  "failed",
+					rtr, _ := json.Marshal(&entity.ResponseStatus{
+						Status:  entity.FAILED,
 						Data:    nil,
 						ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
 					})
@@ -87,8 +88,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 				}
 				err = common.MoveFile(imagePath, permDir+targetUrl)
 				if err != nil {
-					rtr, _ := json.Marshal(&common.ReturnStatus{
-						Status:  "failed",
+					rtr, _ := json.Marshal(&entity.ResponseStatus{
+						Status:  entity.FAILED,
 						Data:    nil,
 						ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
 					})
@@ -105,18 +106,18 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	channelId, _ := strconv.Atoi(r.PostFormValue("channelId"))
 	labels := r.PostFormValue("labels")
 	article, err := data.InsertArticle(title, content,
-		data.Channel{ID: channelId}, labels, typeId, statusId, data.User{ID: userId})
+		data.Channel{ID: channelId}, labels, typeId, statusId, entity.UserAdmin{Id: userId})
 	if err != nil {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
 	}
-	rtr, _ := json.Marshal(&common.ReturnStatus{
-		Status:  "success",
+	rtr, _ := json.Marshal(&entity.ResponseStatus{
+		Status:  entity.SUCCEED,
 		Data:    article,
 		ErrCode: "",
 	})
@@ -128,8 +129,8 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httprouter.Params) {
 	defer func() {
 		if r := recover(); r != nil {
-			rtr, _ := json.Marshal(&common.ReturnStatus{
-				Status:  "failed",
+			rtr, _ := json.Marshal(&entity.ResponseStatus{
+				Status:  entity.FAILED,
 				Data:    nil,
 				ErrCode: common.ReadDataFailedError.SetText(r.(string)).String(),
 			})
@@ -142,8 +143,8 @@ func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httproute
 	pageSize, _ := strconv.Atoi(r.FormValue("pageSize"))
 	articles, err := data.GetArticlesByChannel(pageIndex, pageSize, channelId)
 	if err != nil {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.ReadDataFailedError.SetOrginalErr(err).String(),
 		})
@@ -170,8 +171,8 @@ func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httproute
 			articles[index].FirstImage = string(matchs[1])
 		}
 	}
-	rtr, _ := json.Marshal(&common.ReturnStatus{
-		Status:  "success",
+	rtr, _ := json.Marshal(&entity.ResponseStatus{
+		Status:  entity.SUCCEED,
 		Data:    articles,
 		ErrCode: "",
 	})
@@ -183,8 +184,8 @@ func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httproute
 func GetArticlesById(w http.ResponseWriter, r *http.Request, args httprouter.Params) {
 	defer func() {
 		if r := recover(); r != nil {
-			rtr, _ := json.Marshal(&common.ReturnStatus{
-				Status:  "failed",
+			rtr, _ := json.Marshal(&entity.ResponseStatus{
+				Status:  entity.FAILED,
 				Data:    nil,
 				ErrCode: common.ReadDataFailedError.SetText(r.(string)).String(),
 			})
@@ -195,16 +196,16 @@ func GetArticlesById(w http.ResponseWriter, r *http.Request, args httprouter.Par
 	id, _ := strconv.Atoi(args.ByName("Id"))
 	article, err := data.GetArticlesById(id)
 	if err != nil {
-		rtr, _ := json.Marshal(&common.ReturnStatus{
-			Status:  "failed",
+		rtr, _ := json.Marshal(&entity.ResponseStatus{
+			Status:  entity.FAILED,
 			Data:    nil,
 			ErrCode: common.ReadDataFailedError.SetOrginalErr(err).String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
 	}
-	rtr, _ := json.Marshal(&common.ReturnStatus{
-		Status:  "success",
+	rtr, _ := json.Marshal(&entity.ResponseStatus{
+		Status:  entity.SUCCEED,
 		Data:    article,
 		ErrCode: "",
 	})

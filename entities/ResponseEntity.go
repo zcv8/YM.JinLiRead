@@ -1,8 +1,8 @@
-package common
+package entities
 
 //响应的实体
-type ReturnStatus struct {
-	Status  string
+type ResponseStatus struct {
+	Status  ResponseStatusCode
 	Data    interface{}
 	ErrCode string
 	Cookie  string
