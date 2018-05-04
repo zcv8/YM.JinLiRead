@@ -84,8 +84,3 @@ func staticHandler(w http.ResponseWriter, r *http.Request, p httprouter.Params) 
 	w.Header().Add("Content-Type", responseType)
 	w.Write(bytes)
 }
-
-func init() {
-	//设置调用错误时是否开启日志记录功能
-	common.IfWriteErrLog = true
-}

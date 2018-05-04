@@ -21,8 +21,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Data:    err,
-			Message: "get fileStream err",
+			Message: common.ApplicationInternalError.SetOrginalError(err),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -32,8 +31,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Data:    err,
-			Message: "generate temp err",
+			Message: common.ApplicationInternalError.SetOrginalError(err),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -43,8 +41,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Data:    err,
-			Message: "generate file extend name err",
+			Message: common.ApplicationInternalError.SetOrginalError(err),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -56,8 +53,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Data:    err,
-			Message: "open file err",
+			Message: common.ApplicationInternalError.SetOrginalError(err),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -67,16 +63,14 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Data:    err,
-			Message: "save file err",
+			Message: common.ApplicationInternalError.SetOrginalError(err),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
 	}
 	rtr, _ := json.Marshal(&entity.ResponseStatus{
-		Status:  entity.SUCCEED,
-		Data:    "/static/temps/" + newFileName,
-		Message: "",
+		Status: entity.SUCCEED,
+		Data:   "/static/temps/" + newFileName,
 	})
 	fmt.Fprint(w, string(rtr))
 }

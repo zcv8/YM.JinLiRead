@@ -4,6 +4,6 @@ package entities
 type ResponseStatus struct {
 	Status  ResponseStatusCode
 	Data    interface{}
-	Message string
+	Message error
 	Cookie  string
 }

@@ -20,14 +20,12 @@ func GetChannels(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if err != nil {
 		json.NewEncoder(w).Encode(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Data:    nil,
-			Message: common.ReadDataFailedError.SetOrginalErr(err).String(),
+			Message: common.ApplicationInternalError.SetOrginalError(err),
 		})
 		return
 	}
 	json.NewEncoder(w).Encode(&entity.ResponseStatus{
-		Status:  entity.SUCCEED,
-		Data:    channels,
-		Message: "",
+		Status: entity.SUCCEED,
+		Data:   channels,
 	})
 }
