@@ -22,7 +22,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    err,
-			ErrCode: "get fileStream err",
+			Message: "get fileStream err",
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -33,7 +33,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    err,
-			ErrCode: "generate temp err",
+			Message: "generate temp err",
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -44,7 +44,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    err,
-			ErrCode: "generate file extend name err",
+			Message: "generate file extend name err",
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -57,7 +57,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    err,
-			ErrCode: "open file err",
+			Message: "open file err",
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -68,7 +68,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    err,
-			ErrCode: "save file err",
+			Message: "save file err",
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -76,7 +76,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	rtr, _ := json.Marshal(&entity.ResponseStatus{
 		Status:  entity.SUCCEED,
 		Data:    "/static/temps/" + newFileName,
-		ErrCode: "",
+		Message: "",
 	})
 	fmt.Fprint(w, string(rtr))
 }

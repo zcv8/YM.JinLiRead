@@ -26,7 +26,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 			rtr, _ := json.Marshal(&entity.ResponseStatus{
 				Status:  entity.FAILED,
 				Data:    nil,
-				ErrCode: common.InsertDataFailedError.SetText(r.(string)).String(),
+				Message: common.InsertDataFailedError.SetText(r.(string)).String(),
 			})
 			fmt.Fprint(w, string(rtr))
 			return
@@ -38,7 +38,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.InvalidSessionError.String(),
+			Message: common.InvalidSessionError.String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -53,7 +53,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
+			Message: common.InsertDataFailedError.SetOrginalErr(err).String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -70,7 +70,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 					rtr, _ := json.Marshal(&entity.ResponseStatus{
 						Status:  entity.FAILED,
 						Data:    nil,
-						ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
+						Message: common.InsertDataFailedError.SetOrginalErr(err).String(),
 					})
 					fmt.Fprint(w, string(rtr))
 					return
@@ -81,7 +81,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 					rtr, _ := json.Marshal(&entity.ResponseStatus{
 						Status:  entity.FAILED,
 						Data:    nil,
-						ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
+						Message: common.InsertDataFailedError.SetOrginalErr(err).String(),
 					})
 					fmt.Fprint(w, string(rtr))
 					return
@@ -91,7 +91,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 					rtr, _ := json.Marshal(&entity.ResponseStatus{
 						Status:  entity.FAILED,
 						Data:    nil,
-						ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
+						Message: common.InsertDataFailedError.SetOrginalErr(err).String(),
 					})
 					fmt.Fprint(w, string(rtr))
 					return
@@ -111,7 +111,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.InsertDataFailedError.SetOrginalErr(err).String(),
+			Message: common.InsertDataFailedError.SetOrginalErr(err).String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -119,7 +119,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	rtr, _ := json.Marshal(&entity.ResponseStatus{
 		Status:  entity.SUCCEED,
 		Data:    article,
-		ErrCode: "",
+		Message: "",
 	})
 	fmt.Fprint(w, string(rtr))
 	return
@@ -132,7 +132,7 @@ func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httproute
 			rtr, _ := json.Marshal(&entity.ResponseStatus{
 				Status:  entity.FAILED,
 				Data:    nil,
-				ErrCode: common.ReadDataFailedError.SetText(r.(string)).String(),
+				Message: common.ReadDataFailedError.SetText(r.(string)).String(),
 			})
 			fmt.Fprint(w, string(rtr))
 		}
@@ -146,7 +146,7 @@ func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httproute
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.ReadDataFailedError.SetOrginalErr(err).String(),
+			Message: common.ReadDataFailedError.SetOrginalErr(err).String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -174,7 +174,7 @@ func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httproute
 	rtr, _ := json.Marshal(&entity.ResponseStatus{
 		Status:  entity.SUCCEED,
 		Data:    articles,
-		ErrCode: "",
+		Message: "",
 	})
 	fmt.Fprint(w, string(rtr))
 	return
@@ -187,7 +187,7 @@ func GetArticlesById(w http.ResponseWriter, r *http.Request, args httprouter.Par
 			rtr, _ := json.Marshal(&entity.ResponseStatus{
 				Status:  entity.FAILED,
 				Data:    nil,
-				ErrCode: common.ReadDataFailedError.SetText(r.(string)).String(),
+				Message: common.ReadDataFailedError.SetText(r.(string)).String(),
 			})
 			fmt.Fprint(w, string(rtr))
 		}
@@ -199,7 +199,7 @@ func GetArticlesById(w http.ResponseWriter, r *http.Request, args httprouter.Par
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.ReadDataFailedError.SetOrginalErr(err).String(),
+			Message: common.ReadDataFailedError.SetOrginalErr(err).String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -207,7 +207,7 @@ func GetArticlesById(w http.ResponseWriter, r *http.Request, args httprouter.Par
 	rtr, _ := json.Marshal(&entity.ResponseStatus{
 		Status:  entity.SUCCEED,
 		Data:    article,
-		ErrCode: "",
+		Message: "",
 	})
 	fmt.Fprint(w, string(rtr))
 	return

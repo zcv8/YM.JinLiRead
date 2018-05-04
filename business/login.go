@@ -33,7 +33,7 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.InvalidFormatterError.String(),
+			Message: common.InvalidFormatterError.String(),
 		})
 		fmt.Fprint(wr, string(rtr))
 		return
@@ -42,7 +42,7 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.StringTooLongError.String(),
+			Message: common.StringTooLongError.String(),
 		})
 		fmt.Fprint(wr, string(rtr))
 		return
@@ -60,7 +60,7 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 			rtr, _ := json.Marshal(&entity.ResponseStatus{
 				Status:  entity.FAILED,
 				Data:    user,
-				ErrCode: common.UpdateDataFailedError.String(),
+				Message: common.UpdateDataFailedError.String(),
 				Cookie:  "",
 			})
 			fmt.Fprint(wr, string(rtr))
@@ -70,7 +70,7 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 			rtr, _ := json.Marshal(&entity.ResponseStatus{
 				Status:  entity.SUCCEED,
 				Data:    user,
-				ErrCode: "",
+				Message: "",
 				Cookie: fmt.Sprintf("%s=%s;Path=/; Domain=lovemoqing.com;Max-Age=%d",
 					common.AuthorizationKey, session.SessionID(), tempTime),
 			})
@@ -80,7 +80,7 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    err,
-			ErrCode: common.AuthenticationFailedError.String(),
+			Message: common.AuthenticationFailedError.String(),
 		})
 		fmt.Fprint(wr, string(rtr))
 	}
@@ -95,7 +95,7 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.InvalidFormatterError.String(),
+			Message: common.InvalidFormatterError.String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -104,7 +104,7 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.StringTooLongError.String(),
+			Message: common.StringTooLongError.String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -115,7 +115,7 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.VerificationCodeError.String(),
+			Message: common.VerificationCodeError.String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -123,16 +123,16 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	user, err := data.InsertUser(username, md5Password)
 	if err != nil {
-		var errCode string
+		var Message string
 		if err.Error() == "Exist" {
-			errCode = common.ExistingDataError.SetOrginalErr(err).String()
+			Message = common.ExistingDataError.SetOrginalErr(err).String()
 		} else {
-			errCode = common.InsertDataFailedError.SetOrginalErr(err).String()
+			Message = common.InsertDataFailedError.SetOrginalErr(err).String()
 		}
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    err,
-			ErrCode: errCode,
+			Message: Message,
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -145,7 +145,7 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    user,
-			ErrCode: common.UpdateDataFailedError.String(),
+			Message: common.UpdateDataFailedError.String(),
 			Cookie:  "",
 		})
 		fmt.Fprint(w, string(rtr))
@@ -154,7 +154,7 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.SUCCEED,
 			Data:    user,
-			ErrCode: "",
+			Message: "",
 			Cookie: fmt.Sprintf("%s=%s;Path=/; Domain=lovemoqing.com;Max-Age=%d",
 				common.AuthorizationKey, session.SessionID(), 3600),
 		})
@@ -169,7 +169,7 @@ func Logout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	rtr, _ := json.Marshal(&entity.ResponseStatus{
 		Status:  entity.SUCCEED,
 		Data:    nil,
-		ErrCode: common.InvalidSessionError.String(),
+		Message: common.InvalidSessionError.String(),
 		Cookie: fmt.Sprintf("%s='';Path=/; Domain=lovemoqing.com;Max-Age=-1",
 			common.AuthorizationKey),
 	})
@@ -192,7 +192,7 @@ func ValidLoginStatus(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.InvalidSessionError.String(),
+			Message: common.InvalidSessionError.String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -203,7 +203,7 @@ func ValidLoginStatus(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			ErrCode: common.InvalidSessionError.String(),
+			Message: common.InvalidSessionError.String(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -211,7 +211,7 @@ func ValidLoginStatus(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	rtr, _ := json.Marshal(&entity.ResponseStatus{
 		Status:  entity.SUCCEED,
 		Data:    user,
-		ErrCode: "",
+		Message: "",
 	})
 	fmt.Fprint(w, string(rtr))
 }
