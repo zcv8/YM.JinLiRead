@@ -27,7 +27,7 @@ func Authentication(h httprouter.Handle) httprouter.Handle {
 			rtr, _ := json.Marshal(&entity.ResponseStatus{
 				Status:  entity.FAILED,
 				Data:    nil,
-				Message: common.InterfaceUsageError.SetText("INVALID_SESSION"),
+				Message: common.InterfaceUsageError.SetText("INVALID_SESSION").Error(),
 			})
 			fmt.Fprint(w, string(rtr))
 		}

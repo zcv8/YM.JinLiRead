@@ -32,7 +32,7 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if !common.ValidEmail(username) && !common.ValidPhone(username) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.InterfaceUsageError.SetText("Incorrect format of email or cell phone"),
+			Message: common.InterfaceUsageError.SetText("Incorrect format of email or cell phone").Error(),
 		})
 		fmt.Fprint(wr, string(rtr))
 		return
@@ -40,7 +40,7 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if len(password) < 6 || len(password) > 16 {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.InterfaceUsageError.SetText("Password length should be greater than 6 bits and less than 16 bits"),
+			Message: common.InterfaceUsageError.SetText("Password length should be greater than 6 bits and less than 16 bits").Error(),
 		})
 		fmt.Fprint(wr, string(rtr))
 		return
@@ -58,7 +58,7 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 			rtr, _ := json.Marshal(&entity.ResponseStatus{
 				Status:  entity.FAILED,
 				Data:    user,
-				Message: common.ApplicationInternalError.SetOrginalError(err),
+				Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 				Cookie:  "",
 			})
 			fmt.Fprint(wr, string(rtr))
@@ -77,7 +77,7 @@ func Login(wr http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    err,
-			Message: common.InterfaceUsageError.SetText("Passwords do not match"),
+			Message: common.InterfaceUsageError.SetText("Passwords do not match").Error(),
 		})
 		fmt.Fprint(wr, string(rtr))
 	}
@@ -91,7 +91,7 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if !common.ValidEmail(username) && !common.ValidPhone(username) {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.InterfaceUsageError.SetText("Incorrect format of email or cell phone"),
+			Message: common.InterfaceUsageError.SetText("Incorrect format of email or cell phone").Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -99,7 +99,7 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if len(password) < 6 || len(password) > 16 {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.InterfaceUsageError.SetText("Password length should be greater than 6 bits and less than 16 bits"),
+			Message: common.InterfaceUsageError.SetText("Password length should be greater than 6 bits and less than 16 bits").Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -109,7 +109,7 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if !res {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.InterfaceUsageError.SetText("Incorrect verification code"),
+			Message: common.InterfaceUsageError.SetText("Incorrect verification code").Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -117,11 +117,11 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 
 	user, err := data.InsertUser(username, md5Password)
 	if err != nil {
-		var Message error
+		var Message string
 		if err.Error() == "Exist" {
-			Message = common.InterfaceUsageError.SetText("The user already exists. Please re-register")
+			Message = common.InterfaceUsageError.SetText("The user already exists. Please re-register").Error()
 		} else {
-			Message = common.ApplicationInternalError.SetOrginalError(err)
+			Message = common.ApplicationInternalError.SetOrginalError(err).Error()
 		}
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
@@ -137,7 +137,7 @@ func Register(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 			Cookie:  "",
 		})
 		fmt.Fprint(w, string(rtr))
@@ -159,7 +159,7 @@ func Logout(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	Manager.SessionDestroy(w, r)
 	rtr, _ := json.Marshal(&entity.ResponseStatus{
 		Status:  entity.SUCCEED,
-		Message: common.InterfaceUsageError.SetText("INVALID_SESSION"),
+		Message: common.InterfaceUsageError.SetText("INVALID_SESSION").Error(),
 		Cookie: fmt.Sprintf("%s='';Path=/; Domain=lovemoqing.com;Max-Age=-1",
 			common.AuthorizationKey),
 	})
@@ -181,7 +181,7 @@ func ValidLoginStatus(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	if session == nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.InterfaceUsageError.SetText("INVALID_SESSION"),
+			Message: common.InterfaceUsageError.SetText("INVALID_SESSION").Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -191,7 +191,7 @@ func ValidLoginStatus(w http.ResponseWriter, r *http.Request, _ httprouter.Param
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return

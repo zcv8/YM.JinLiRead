@@ -21,7 +21,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -31,7 +31,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -41,7 +41,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -53,7 +53,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -63,7 +63,7 @@ func UploadArticleImage(w http.ResponseWriter, r *http.Request, params httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return

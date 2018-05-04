@@ -20,6 +20,8 @@ var (
 	InterfaceUsageError      = interfaceUsageError{}
 )
 
+const defaultApplicationInterErrorText = "An error occurred, Please contact the administrator"
+
 type baseError struct {
 	Text string
 }
@@ -35,6 +37,11 @@ func (err *baseError) SetText(text string) *baseError {
 	return err
 }
 
+//改变Json的打包方式Json
+func (err *baseError) MarshalJSON() ([]byte, error) {
+	return []byte(err.Text), nil
+}
+
 type applicationInternalError struct {
 	baseError
 	orginalError error
@@ -42,19 +49,26 @@ type applicationInternalError struct {
 
 //设置原始错误
 func (err *applicationInternalError) SetOrginalError(originErr error) *applicationInternalError {
+	if err.Text == "" {
+		err.Text = defaultApplicationInterErrorText
+	}
 	err.orginalError = originErr
 	return err
 }
 
 //实现error接口
 func (err *applicationInternalError) Error() string {
-	if err.Text != "" {
+	if err.Text != "" && err.Text != defaultApplicationInterErrorText {
 		Error(fmt.Sprintf("<InternalError>:%s", err.Text))
 	}
 	if err.orginalError != nil {
 		Error(fmt.Sprintf("<OrginalError>:%s", err.orginalError.Error()))
 	}
-	return "An error occurred, Please contact the administrator"
+	return err.Text
+}
+
+func (err *applicationInternalError) MarshalJSON() ([]byte, error) {
+	return []byte("OK"), nil
 }
 
 type interfaceUsageError struct {

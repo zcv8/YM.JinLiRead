@@ -20,7 +20,7 @@ func GetChannels(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if err != nil {
 		json.NewEncoder(w).Encode(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		return
 	}

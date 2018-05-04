@@ -26,7 +26,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 		if r := recover(); r != nil {
 			rtr, _ := json.Marshal(&entity.ResponseStatus{
 				Status:  entity.FAILED,
-				Message: common.ApplicationInternalError.SetOrginalError(errors.New(r.(string))),
+				Message: common.ApplicationInternalError.SetOrginalError(errors.New(r.(string))).Error(),
 			})
 			fmt.Fprint(w, string(rtr))
 			return
@@ -37,7 +37,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	if !res {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.InterfaceUsageError.SetText("INVALID_SESSION"),
+			Message: common.InterfaceUsageError.SetText("INVALID_SESSION").Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -51,7 +51,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -67,7 +67,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 				if err != nil {
 					rtr, _ := json.Marshal(&entity.ResponseStatus{
 						Status:  entity.FAILED,
-						Message: common.ApplicationInternalError.SetOrginalError(err),
+						Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 					})
 					fmt.Fprint(w, string(rtr))
 					return
@@ -77,7 +77,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 				if err != nil {
 					rtr, _ := json.Marshal(&entity.ResponseStatus{
 						Status:  entity.FAILED,
-						Message: common.ApplicationInternalError.SetOrginalError(err),
+						Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 					})
 					fmt.Fprint(w, string(rtr))
 					return
@@ -86,7 +86,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 				if err != nil {
 					rtr, _ := json.Marshal(&entity.ResponseStatus{
 						Status:  entity.FAILED,
-						Message: common.ApplicationInternalError.SetOrginalError(err),
+						Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 					})
 					fmt.Fprint(w, string(rtr))
 					return
@@ -105,7 +105,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -124,7 +124,7 @@ func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httproute
 		if r := recover(); r != nil {
 			rtr, _ := json.Marshal(&entity.ResponseStatus{
 				Status:  entity.FAILED,
-				Message: common.ApplicationInternalError.SetOrginalError(errors.New(r.(string))),
+				Message: common.ApplicationInternalError.SetOrginalError(errors.New(r.(string))).Error(),
 			})
 			fmt.Fprint(w, string(rtr))
 		}
@@ -137,7 +137,7 @@ func GetArticlesByChannel(w http.ResponseWriter, r *http.Request, args httproute
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
@@ -177,7 +177,7 @@ func GetArticlesById(w http.ResponseWriter, r *http.Request, args httprouter.Par
 			rtr, _ := json.Marshal(&entity.ResponseStatus{
 				Status:  entity.FAILED,
 				Data:    nil,
-				Message: common.ApplicationInternalError.SetOrginalError(errors.New(r.(string))),
+				Message: common.ApplicationInternalError.SetOrginalError(errors.New(r.(string))).Error(),
 			})
 			fmt.Fprint(w, string(rtr))
 		}
@@ -189,7 +189,7 @@ func GetArticlesById(w http.ResponseWriter, r *http.Request, args httprouter.Par
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
 			Data:    nil,
-			Message: common.ApplicationInternalError.SetOrginalError(err),
+			Message: common.ApplicationInternalError.SetOrginalError(err).Error(),
 		})
 		fmt.Fprint(w, string(rtr))
 		return
