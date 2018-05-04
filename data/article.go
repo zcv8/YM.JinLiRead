@@ -7,6 +7,8 @@ package data
 import (
 	_ "encoding/json"
 	"time"
+
+	entity "github.com/zcv8/YM.JinLiRead/entities"
 )
 
 type ArticleType int
@@ -41,9 +43,9 @@ type Article struct {
 
 //级联查询返回的结构体
 type ArticleInfo struct {
-	User    `xorm:"extends"`
-	Channel `xorm:"extends"`
-	Article `xorm:"extends"`
+	entity.UserAdmin `xorm:"extends"`
+	Channel          `xorm:"extends"`
+	Article          `xorm:"extends"`
 }
 
 func (a *ArticleInfo) TableName() string {
@@ -52,7 +54,7 @@ func (a *ArticleInfo) TableName() string {
 
 //插入文章
 func InsertArticle(title, content string, channel Channel,
-	lables string, articleType int, status int, user User) (article Article, err error) {
+	lables string, articleType int, status int, user entity.UserAdmin) (article Article, err error) {
 	article = Article{
 		Title:      title,
 		Content:    content,
@@ -61,7 +63,7 @@ func InsertArticle(title, content string, channel Channel,
 		Type:       articleType,
 		Status:     status,
 		ReadCount:  0,
-		CreateUser: user.ID,
+		CreateUser: user.Id,
 	}
 	_, err = Db.Insert(&article)
 	return

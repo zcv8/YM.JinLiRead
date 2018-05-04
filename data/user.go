@@ -9,38 +9,26 @@ import (
 	"time"
 
 	"github.com/zcv8/YM.JinLiRead/common"
+	entity "github.com/zcv8/YM.JinLiRead/entities"
 )
 
-type User struct {
-	ID            int
-	UserName      string
-	Email         string
-	Phone         string
-	Password      string
-	State         int
-	LastLoginIP   string
-	LastLoginTime time.Time
-	CreateTime    time.Time `xorm:"created"`
-	VerifyCode    string
-}
-
 //获取用户根据用户名
-func GetUser(username string) (user User, err error) {
-	user = User{}
+func GetUser(username string) (user entity.UserAdmin, err error) {
+	user = entity.UserAdmin{}
 	_, err = Db.Where("email=?", username).Or("phone=?", username).Get(&user)
 	return
 }
 
 //根据用户根据用户Id
-func GetUserById(uid int) (user User, err error) {
-	user = User{}
+func GetUserById(uid int) (user entity.UserAdmin, err error) {
+	user = entity.UserAdmin{}
 	_, err = Db.Id(uid).Get(&user)
 	return
 }
 
 //插入用户
-func InsertUser(username string, password string) (user User, err error) {
-	user = User{}
+func InsertUser(username string, password string) (user entity.UserAdmin, err error) {
+	user = entity.UserAdmin{}
 	user, err = GetUser(username)
 	if err == nil {
 		err = errors.New("Exist")
@@ -58,7 +46,7 @@ func InsertUser(username string, password string) (user User, err error) {
 
 //更新用户最后一次登录的信息
 func UpdateUserLastLogin(uid int, ip string, loginTime time.Time) (err error) {
-	user := User{}
+	user := entity.UserAdmin{}
 	user.LastLoginIP = ip
 	user.LastLoginTime = loginTime
 	_, err = Db.Id(uid).Cols("lastloginip", "lastlogintime").Update(&user)
