@@ -35,8 +35,8 @@ type Article struct {
 	FirstImage string    `json:"image"`
 	CreateUser int       `json:"user"`
 	ReadCount  int       `json:"readcount"`
-	CreateTime time.Time `json:"createtime",xorm:"created"`
-	UpdateTime time.Time `json:"updatetime",xorm:"updated"`
+	CreateTime time.Time `json:"createtime" xorm:"created"`
+	UpdateTime time.Time `json:"updatetime" xorm:"updated"`
 }
 
 //级联查询返回的结构体
@@ -62,8 +62,6 @@ func InsertArticle(title, content string, channel Channel,
 		Status:     status,
 		ReadCount:  0,
 		CreateUser: user.ID,
-		CreateTime: time.Now(),
-		UpdateTime: time.Now(),
 	}
 	_, err = Db.Insert(&article)
 	return

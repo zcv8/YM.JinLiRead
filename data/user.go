@@ -6,7 +6,6 @@ package data
 
 import (
 	"errors"
-	_ "log"
 	"time"
 
 	"github.com/zcv8/YM.JinLiRead/common"

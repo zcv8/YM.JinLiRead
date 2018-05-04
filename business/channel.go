@@ -19,8 +19,8 @@ func GetChannels(w http.ResponseWriter, r *http.Request, _ httprouter.Params) {
 	if err != nil {
 		json.NewEncoder(w).Encode(&common.ReturnStatus{
 			Status:  "failed",
-			Data:    err,
-			ErrCode: common.ReadDataFailedError.String(),
+			Data:    "",
+			ErrCode: common.ReadDataFailedError.SetOrginalErr(err).String(),
 		})
 		return
 	}
