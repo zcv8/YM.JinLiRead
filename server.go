@@ -2,7 +2,6 @@ package main
 
 import (
 	"fmt"
-	_ "log"
 	"net/http"
 
 	"github.com/julienschmidt/httprouter"
@@ -12,9 +11,10 @@ import (
 )
 
 //还需要完成的事情：
-//		1. 依赖注入：可参考 .net 依赖注入框架的源码实现
+//		1. 依赖注入：可参考 .net 依赖注入框架的源码实现 可以参考 Martini 框架
 //		2. 全局注册拦截器：对每一次请求都可以实现请求之前和请求之后做一些操作
 //		3. 模型的验证操作
+//		4. 日志使用日志组件 logrus
 
 func main() {
 
