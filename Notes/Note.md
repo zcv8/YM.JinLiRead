@@ -67,6 +67,10 @@
  - 10.1 使用开源的第三方ORM 实现对数据的操作逻辑
  > 参考：http://www.xorm.io/docs/
 
+### 11.使用Logrus实现对日志的统一管理（更新于2018.05.06）
+- 11.1 使用开源的日志记录器Logrus，Logrus提供多样化的日志纪录
+> 参考：https://github.com/sirupsen/logrus
+
 
 
 

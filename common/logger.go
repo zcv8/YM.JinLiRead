@@ -1,61 +1,19 @@
 package common
 
 import (
-	"fmt"
-	"log"
-	"os"
-	"runtime"
-	"strings"
+	log "github.com/sirupsen/logrus"
 )
 
 /*
- * 日志管理
- 	自己写的代码, 成熟模块输出到info级别, 新写的模块 debug级别,99%的可能问题都出在这里.别人家的模块, 输出warn就好.
-	这里自己,指的是你或是你的团队.
-	别人家,是指系统和开源框架或工具类.
+ * 日志管理 使用Logrus
+		你或是你的团队写的代码
+			成熟模块输出到info级别
+			新写的模块 debug级别,99%的可能问题都出在这里
+		第三方系统和开源框架或工具类.
+			输出warn就好.
 */
 
-//日志级别
-
-type LogLevel int
-
-const (
-	INFO LogLevel = iota
-	DEBUG
-	WARN
-	ERROR
-	FATAL
-)
-
-//重写String方法
-func (level LogLevel) String() string {
-	str, ok := logLevelTexts[level]
-	if ok {
-		return str
-	}
-	return "NIL"
-}
-
-var applicationDir string = "./"
-
-var logLevelTexts = make(map[LogLevel]string)
-
-func init() {
-	applicationDir, _ = GetPath(applicationDir)
-	logLevelTexts[INFO] = "INFO"
-	logLevelTexts[DEBUG] = "DEBUG"
-	logLevelTexts[WARN] = "WARN"
-	logLevelTexts[ERROR] = "ERROR"
-	logLevelTexts[FATAL] = "FATAL"
-}
-
-func Info(str string)  { writeLog(str, INFO) }
-func Debug(str string) { writeLog(str, DEBUG) }
-func Error(str string) { writeLog(str, ERROR) }
-func Warn(str string)  { writeLog(str, WARN) }
-func Fatal(str string) { writeLog(str, FATAL); os.Exit(-1) }
-
-//默认写日志的方法
+/*默认写日志的方法
 func writeLog(msg string, level LogLevel) {
 	strackTraces := make([]string, 0)
 	for i := 0; i < 15; i++ {
@@ -87,4 +45,20 @@ func writeLog(msg string, level LogLevel) {
 	}
 	starckTraceString := "******************StackTrace****************** \n" + strings.Join(strackTraces, "")
 	log.Println(fmt.Sprintf("[%s] %s \n %s", level, msg, starckTraceString))
+}
+*/
+
+func Error(text string) {
+	log.WithFields(log.Fields{
+		"test": "Test1",
+	}).Error(text)
+}
+
+func Fatal(text string) {
+	log.Fatal(text)
+}
+
+func init() {
+	//设置输出格式为文本格式
+	log.SetFormatter(&log.TextFormatter{})
 }

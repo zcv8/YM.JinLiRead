@@ -1,6 +1,6 @@
 {
 	"ImportPath": "github.com/zcv8/YM.JinLiRead",
-	"GoVersion": "go1.10",
+	"GoVersion": "go1.9",
 	"GodepVersion": "v80",
 	"Deps": [
 		{
@@ -54,12 +54,29 @@
 			"Rev": "7d0b78ad1685f79a0fea381c107d77ec1f812500"
 		},
 		{
+			"ImportPath": "github.com/sirupsen/logrus",
+			"Comment": "v1.0.5-16-g778f2e7",
+			"Rev": "778f2e774c725116edbc3d039dc0dfc1cc62aae8"
+		},
+		{
+			"ImportPath": "golang.org/x/crypto/ssh/terminal",
+			"Rev": "2c241ca3045ddc354463c376a9515d9f1f1390a4"
+		},
+		{
 			"ImportPath": "golang.org/x/image/font",
 			"Rev": "f315e440302883054d0c2bd85486878cb4f8572c"
 		},
 		{
 			"ImportPath": "golang.org/x/image/math/fixed",
 			"Rev": "f315e440302883054d0c2bd85486878cb4f8572c"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/unix",
+			"Rev": "6f686a352de66814cdd080d970febae7767857a3"
+		},
+		{
+			"ImportPath": "golang.org/x/sys/windows",
+			"Rev": "6f686a352de66814cdd080d970febae7767857a3"
 		}
 	]
 }
