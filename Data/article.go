@@ -44,7 +44,7 @@ type Article struct {
 //级联查询返回的结构体
 type ArticleInfo struct {
 	entity.UserAdmin `xorm:"extends"`
-	Channel          `xorm:"extends"`
+	entity.Channel   `xorm:"extends"`
 	Article          `xorm:"extends"`
 }
 
@@ -53,12 +53,12 @@ func (a *ArticleInfo) TableName() string {
 }
 
 //插入文章
-func InsertArticle(title, content string, channel Channel,
+func InsertArticle(title, content string, channel entity.Channel,
 	lables string, articleType int, status int, user entity.UserAdmin) (article Article, err error) {
 	article = Article{
 		Title:      title,
 		Content:    content,
-		ChannelId:  channel.ID,
+		ChannelId:  channel.Id,
 		Labels:     lables,
 		Type:       articleType,
 		Status:     status,

@@ -101,7 +101,7 @@ func CreateArticle(w http.ResponseWriter, r *http.Request, _ httprouter.Params) 
 	channelId, _ := strconv.Atoi(r.PostFormValue("channelId"))
 	labels := r.PostFormValue("labels")
 	article, err := data.InsertArticle(title, content,
-		data.Channel{ID: channelId}, labels, typeId, statusId, entity.UserAdmin{Id: userId})
+		entity.Channel{Id: channelId}, labels, typeId, statusId, entity.UserAdmin{Id: userId})
 	if err != nil {
 		rtr, _ := json.Marshal(&entity.ResponseStatus{
 			Status:  entity.FAILED,
