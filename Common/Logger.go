@@ -49,9 +49,7 @@ func writeLog(msg string, level LogLevel) {
 */
 
 func Error(text string) {
-	log.WithFields(log.Fields{
-		"test": "Test1",
-	}).Error(text)
+	log.Error(text)
 }
 
 func Fatal(text string) {

@@ -10,9 +10,9 @@ type Article struct {
 	Labels     string    `json:"labels"`
 	Type       int       `json:"type"`
 	Status     int       `json:"status"`
-	FirstImage string    `json:"image"`
+	FirstImage string    `json:"image" xorm:"-"`
 	Author     int       `json:"author"`
-	Views      int       `json:"readcount"`
+	Views      int       `json:"views"`
 	CreateTime time.Time `json:"createtime" xorm:"created"`
 	UpdateTime time.Time `json:"updatetime" xorm:"updated"`
 }
