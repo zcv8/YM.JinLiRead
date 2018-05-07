@@ -11,8 +11,8 @@ type Article struct {
 	Type       int       `json:"type"`
 	Status     int       `json:"status"`
 	FirstImage string    `json:"image"`
-	CreateUser int       `json:"user"`
-	ReadCount  int       `json:"readcount"`
+	Author     int       `json:"author"`
+	Views      int       `json:"readcount"`
 	CreateTime time.Time `json:"createtime" xorm:"created"`
 	UpdateTime time.Time `json:"updatetime" xorm:"updated"`
 }

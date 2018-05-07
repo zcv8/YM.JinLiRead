@@ -14,14 +14,14 @@ import (
 func InsertArticle(title, content string, channel entity.Channel,
 	lables string, articleType int, status int, user entity.UserAdmin) (article entity.Article, err error) {
 	article = entity.Article{
-		Title:      title,
-		Content:    content,
-		ChannelId:  channel.Id,
-		Labels:     lables,
-		Type:       articleType,
-		Status:     status,
-		ReadCount:  0,
-		CreateUser: user.Id,
+		Title:     title,
+		Content:   content,
+		ChannelId: channel.Id,
+		Labels:    lables,
+		Type:      articleType,
+		Status:    status,
+		Views:     0,
+		Author:    user.Id,
 	}
 	_, err = Db.Insert(&article)
 	return
@@ -32,9 +32,9 @@ func GetArticlesByChannel(pageIndex int, pageSize int,
 	channelId int) (aInfos []entity.ArticleInfo, err error) {
 	aInfos = make([]entity.ArticleInfo, 0)
 	aInfo := entity.ArticleInfo{}
-	result := Db.Join("INNER", "UserAdmin", "UserAdmin.Id=Article.CreateUser").Join("INNER", "Channel", "Channel.Id = Article.ChannelId")
+	result := Db.Join("INNER", "\"UserAdmin\"", "\"UserAdmin\".\"Id\"=\"Article\".\"Author\"").Join("INNER", "\"Channel\"", "\"Channel\".\"Id\" = \"Article\".\"ChannelId\"")
 	if channelId != 0 {
-		result = result.Where("Article.ChannelId=?", channelId)
+		result = result.Where("\"Article\".\"ChannelId\"=?", channelId)
 	}
 	rows, err := result.Limit(pageSize, (pageIndex-1)*pageSize).Rows(&aInfo)
 
